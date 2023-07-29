@@ -2,7 +2,8 @@
 
 ## Database Schema Design
 
-`<insert database schema design here>`
+![Screenshot (5)](https://github.com/Calderon1199/Project-Airbnb-1/assets/109112847/06f5c6a1-3b22-47bf-8ba6-765ed52c2a04)
+
 
 ## API Documentation
 
