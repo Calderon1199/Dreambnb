@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const { environment } = require('./config');
 const { production } = require('./config/database');
 const isProduction = environment === 'production';
+const routes = require('./routes');
 
 //  INITIALIZE APP
 const app = express();
@@ -39,7 +40,10 @@ app.use(
 );
 
 //  ROUTES
+app.use(routes);
 
 //  ERROR HANDLING MIDDLEWARE
 
 //  EXPORTS
+
+module.exports = app;
