@@ -6,7 +6,7 @@ router.post('/test', function(req, res) {
   });
 
 
-// Add a XSRF-TOKEN cookie
+// Add a XSRF-TOKEN cookies
 router.get("/csrf/restore", (req, res) => {
     const csrfToken = req.csrfToken();
     res.cookie("XSRF-TOKEN", csrfToken);
