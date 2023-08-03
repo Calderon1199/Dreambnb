@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![Screenshot (7)](https://github.com/Calderon1199/Dreambnb/assets/109112847/11b666ca-e541-40d1-940c-0f1320e66f15)
+![Screenshot (8)](https://github.com/Calderon1199/Dreambnb/assets/109112847/7bd400ba-f986-46c1-9371-e1bab9db4981)
 
 
 ## API Documentation
