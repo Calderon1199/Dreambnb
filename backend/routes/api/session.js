@@ -2,7 +2,7 @@
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const { setTokenCookie } = require('../../utils/auth');
+const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { validateLogin } = require('../../utils/validators/users');
 
@@ -19,6 +19,7 @@ router.post('/', validateLogin, async (req, res, next) => {
           }
         }
       });
+      console.log(User, 'this is user op');
 
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error('Login failed');
@@ -29,6 +30,7 @@ router.post('/', validateLogin, async (req, res, next) => {
       }
 
       const safeUser = user.toSafeUser();
+      console.log(safeUser, 'this is safeUser');
 
       await setTokenCookie(res, safeUser);
 
@@ -39,9 +41,7 @@ router.post('/', validateLogin, async (req, res, next) => {
   );
 
   // Log out
-router.delete(
-  '/',
-  (_req, res) => {
+router.delete('/', (_req, res) => {
     res.clearCookie('token');
     return res.json({ message: 'success' });
   }
@@ -49,14 +49,16 @@ router.delete(
 
 // Restore session user
 router.get('/', (req, res) => {
-    const { user } = req;
-    if (user) {
-      const safeUser = user.toSafeUser();
-      return res.json({
-        user: safeUser
-      });
-    } else return res.json({ user: null });
+  const { user } = req;
+  if (user) {
+    const safeUser = user.toSafeUser()
+    return res.json({
+      user: safeUser
+    });
+  } else {
+    return res.json({ user: null });
   }
+}
 );
 
 module.exports = router;
