@@ -3,13 +3,8 @@ const { User } = require('../db/models');
 const { jwtConfig: {secret, expiresIn} } = require('../config');
 
 // Sends a JWT Cookie
-const setTokenCookie = (res, user) => {
+const setTokenCookie = (res, safeUser) => {
     // Create the token.
-    const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-    };
     const token = jwt.sign(
       { data: safeUser },
       secret,
