@@ -19,7 +19,6 @@ router.post('/', validateLogin, async (req, res, next) => {
           }
         }
       });
-      console.log(User, 'this is user op');
 
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error('Login failed');
@@ -30,7 +29,6 @@ router.post('/', validateLogin, async (req, res, next) => {
       }
 
       const safeUser = user.toSafeUser();
-      console.log(safeUser, 'this is safeUser');
 
       await setTokenCookie(res, safeUser);
 
