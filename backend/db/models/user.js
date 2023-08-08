@@ -7,11 +7,16 @@ const { Validator } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
+    toSafeUser(){
+      return {
+        id: this.id,
+        email: this.email,
+        username: this.username,
+        firstName: this.firstName,
+        lastName: this.lastName
+      }
+    }
     static associate(models) {
       // define association here
     }
@@ -38,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 256],
         isEmail: true
       }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     hashedPassword: {
       type: DataTypes.STRING,
