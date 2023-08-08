@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       return {
         id: this.id,
         email: this.email,
-        username: this.username
+        username: this.username,
+        firstName: this.firstName,
+        lastName: this.lastName
       }
     }
     static associate(models) {
@@ -41,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 256],
         isEmail: true
       }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     hashedPassword: {
       type: DataTypes.STRING,
