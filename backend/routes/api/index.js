@@ -10,7 +10,7 @@ router.use(restoreUser);
 router.use('/login', loginRouter);
 router.use('/signup', signupRouter);
 router.use('/current_user', currentUserRouter);
-router.use('/users', usersRouter)
+
 // router.get('/set-token-cookie', async (_req, res) => {
 //   const user = await User.findOne({
 //     where: {
