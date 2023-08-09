@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const sessionRouter = require('./session');
 const usersRouter = require('./users');
+const loginRouter = require('./login');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
 
 router.use(restoreUser);
+router.use('/login', loginRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter)
 // router.get('/set-token-cookie', async (_req, res) => {
