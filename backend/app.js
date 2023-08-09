@@ -67,12 +67,19 @@ app.use((_req, _res, next) => {
   });
 
   app.use((err, _req, res, _next) => {
+    console.log(res.status);
     res.status(err.status || 500);
     console.error(err);
 
     let opt = isProduction ? {stack: err.stack} : {}
+    if (err.title === 'Login failed') {
+      return res.json({
+        message: err.errors.message,
+        ...opt
+      });
+    }
     res.json({
-      title: err.title || 'Server Error',
+      // title: err.title || 'Server Error',
       message: err.message,
       errors: err.errors,
       ...opt
