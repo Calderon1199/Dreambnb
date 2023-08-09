@@ -7,7 +7,7 @@ const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
 
-router.post('/', validateSignup, requireAuth, async (req, res) => {
+router.post('/', validateSignup, async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
     const hashedPassword = await bcrypt.hashSync(password);
 
