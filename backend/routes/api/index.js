@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const usersRouter = require('./users');
 const loginRouter = require('./login');
 const signupRouter = require('./signup');
 const currentUserRouter = require('./currentUser');
