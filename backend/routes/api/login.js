@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie } = require('../../utils/auth');
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { validateLogin } = require('../../utils/validators/users');
 
