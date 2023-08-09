@@ -1,11 +1,10 @@
 const express = require('express');
-const { User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
 
 
-router.get('/', (req, res) => {
+router.get('/', requireAuth, (req, res) => {
     const { user } = req;
     if (user) {
       const safeUser = user.toSafeUser()
