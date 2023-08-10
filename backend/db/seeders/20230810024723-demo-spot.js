@@ -1,4 +1,5 @@
 'use strict';
+const { Spot, User } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -9,8 +10,15 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Spots';
 
-    await queryInterface.bulkInsert(options, [
+    const allUsers = await User.findAll();
+
+    if (!allUsers.length) {
+      throw new Error('No users found.');
+    }
+
+    const spotData = [
       {
+        ownerId: allUsers[0].id, // Assign the first user as owner
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
@@ -22,6 +30,7 @@ module.exports = {
         price: 123
       },
       {
+        ownerId: allUsers[1].id, // Assign the second user as owner
         address: "456 Elm Street",
         city: "New York",
         state: "New York",
@@ -33,6 +42,7 @@ module.exports = {
         price: 321
       },
       {
+        ownerId: allUsers[2].id, // Assign the third user as owner
         address: "789 Beach Road",
         city: "Los Angeles",
         state: "California",
@@ -43,19 +53,12 @@ module.exports = {
         description: "Famous pier with amusement park attractions",
         price: 98
       },
-      {
-        address: "101 Nature Trail",
-        city: "Vancouver",
-        state: "British Columbia",
-        country: "Canada",
-        lat: 49.2827,
-        lng: -123.1207,
-        name: "Stanley Park",
-        description: "Large urban park with scenic views and trails",
-        price: 199
-      }
-    ])
-  },
+      // Add more spot objects here
+    ];
+
+    await Spot.bulkCreate(spotData);
+
+},
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
