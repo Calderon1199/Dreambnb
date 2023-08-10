@@ -17,4 +17,4 @@ router.get('/', requireAuth, (req, res) => {
   }
   );
 
-  module.exports = router;
+module.exports = router;
