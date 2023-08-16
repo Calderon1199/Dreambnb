@@ -23,13 +23,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true,
+      validate: {
+        is: /^[0-9]+\s[A-Za-z\s]+$/
+      }
     },
     city: {
       type: DataTypes.STRING(30),
       allowNull: false,
       validate: {
-        isAlpha: true
+        is: /^[A-Za-z\s]+$/
       }
     },
     state: {
@@ -43,25 +47,27 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(60),
       allowNull: false,
       validate: {
-        isAlpha: true
+        is: /^[A-Za-z\s]+$/
       }
     },
     lat: {
       type: DataTypes.DECIMAL(9,2),
       allowNull: false,
       validate: {
-        isDecimal: true
+        isDecimal: true,
+        isNumeric: true
       }
     },
     lng: {
       type: DataTypes.DECIMAL(9,2),
       allowNull: false,
       validate: {
-        isDecimal: true
+        isDecimal: true,
+        isNumeric: true
       }
     },
     name: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     description: {
@@ -72,6 +78,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
+        isNumeric: {
+          msg: 'Price must be a valid number'
+        },
         isBiggerThanZero(value) {
           if (parseInt(value) <= 0) {
             throw new Error('Price must be larger than zero.');
