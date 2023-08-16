@@ -7,16 +7,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  up: async(queryInterface, Sequelize) => {
     options.tableName = 'Spots';
 
-    const allUsers = await User.findAll();
-
-    if (!allUsers.length) {
-      throw new Error('No users found.');
-    }
-
-    const spotData = [
+    return queryInterface.bulkInsert(options, [
       {
         ownerId: allUsers[0].id, // Assign the first user as owner
         address: "123 Disney Lane",
@@ -53,14 +47,10 @@ module.exports = {
         description: "Famous pier with amusement park attractions",
         price: 98
       },
-      // Add more spot objects here
-    ];
-
-    return queryInterface.bulkInsert(options, spotData, {});
-
+    ], {});
 },
 
-  async down (queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
