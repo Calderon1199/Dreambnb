@@ -1,5 +1,5 @@
 'use strict';
-const { Spot, User } = require('../models');
+const { User } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -56,7 +56,7 @@ module.exports = {
       // Add more spot objects here
     ];
 
-    await Spot.bulkCreate(spotData);
+    return queryInterface.bulkInsert(options, spotData, {});
 
 },
 
