@@ -16,7 +16,6 @@ router.get('/', requireAuth, async (req, res) => {
 
 router.get('/user', requireAuth, async (req, res) => {
     const currentUser = req.user;
-    console.log(currentUser.id, '-------------')
 
     // Retrieve all spots owned by the current user
     const ownedSpots = await Spot.findAll({
