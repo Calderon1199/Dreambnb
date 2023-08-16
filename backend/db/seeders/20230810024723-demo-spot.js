@@ -7,8 +7,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  up: async(queryInterface, Sequelize) => {
+  async up (queryInterface, Sequelize) {
     options.tableName = 'Spots';
+
+    const allUsers = await User.findAll();
+
+    if (!allUsers.length) {
+      throw new Error('No users found.');
+    }
 
     return queryInterface.bulkInsert(options, [
       {
@@ -47,10 +53,12 @@ module.exports = {
         description: "Famous pier with amusement park attractions",
         price: 98
       },
+      // Add more spot objects here
     ], {});
+
 },
 
-  down: async (queryInterface, Sequelize) => {
+  async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
