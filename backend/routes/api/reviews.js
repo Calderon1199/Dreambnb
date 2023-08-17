@@ -31,7 +31,7 @@ router.get('/:spot_id/reviews', async (req, res) => {
 
     if (!allReviews.length) return res.status(404).json({ "message": "Spot could not be found"});
 
-    res.json(allReviews);
+    res.json({ Reviews: allReviews });
 });
 
 router.post('/:spot_id/reviews', requireAuth, validateReview, async (req, res) => {
