@@ -1,10 +1,9 @@
-const { Spot, User } = require('../../db/models');
-const handleValidationErrors = require('../../utils/validation');
+const { Spot } = require('../../db/models');
 const router = require('express').Router();
 
 const { requireAuth } = require('../../utils/auth');
 const validateSpot = require('../../utils/validators/spots');
-const app = require('../../app');
+
 
 
 router.get('/', requireAuth, async (req, res) => {
