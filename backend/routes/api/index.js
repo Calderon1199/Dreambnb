@@ -3,6 +3,7 @@ const loginRouter = require('./login');
 const signupRouter = require('./signup');
 const currentUserRouter = require('./currentUser');
 const spotsRouter = require('./spots');
+const reviewsRouter = require('./reviews');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
 
@@ -10,13 +11,14 @@ router.use(restoreUser);
 router.use('/login', loginRouter);
 router.use('/signup', signupRouter);
 router.use('/current_user', currentUserRouter);
-router.use('/spots', spotsRouter);
+router.use('/spots', spotsRouter, reviewsRouter);
+router.use('/reviews', reviewsRouter);
 
 // router.get('/set-token-cookie', async (_req, res) => {
 //   const user = await User.findOne({
 //     where: {
 //       username: 'Demo-lition'
-//     }
+//     }C
 //   });
 //   setTokenCookie(res, user);
 //   return res.json({ user: user });
