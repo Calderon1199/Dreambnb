@@ -7,30 +7,29 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    options.tableName = 'SpotImages';
+    options.tableName = 'ReviewImages';
 
     return queryInterface.bulkInsert(options, [
       {
         url: 'https://example.com/image1.jpg',
-        spotId: 1,
+        reviewId: 1,
       },
       {
         url: 'https://example.com/image2.jpg',
-        spotId: 2,
+        reviewId: 2,
       },
       {
         url: 'https://example.com/image3.jpg',
-        spotId: 3,
+        reviewId: 3,
       },
     ], {});
-
-},
+  },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Bookings';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      spotId: { [Op.in]: [1, 2, 3] }
+      reviewId: { [Op.in]: [1, 2, 3] }
     }, {});
   }
 };
