@@ -1,4 +1,4 @@
-const { Spot, User, Review } = require('../../db/models');
+const { Spot, User, Review, ReviewImage } = require('../../db/models');
 const router = require('express').Router();
 const { requireAuth } = require('../../utils/auth');
 const validateReview = require('../../utils/validators/reviews');
@@ -95,6 +95,96 @@ router.delete('/:review_id', requireAuth, async (req, res) => {
 
     res.json({ message: "Successfully deleted"});
 });
+
+router.post('/:review_id/images', requireAuth, async (req, res, next) => {
+    try {
+    const currentUserId = req.user.id;
+      const reviewId = req.params.review_id;
+      const { url } = req.body;
+
+      const review = await Review.findOne({
+        where: {
+          id: reviewId,
+        }
+      });
+
+    if (!review) {
+        return res.status(404).json({ message: "Review couldn't be found" });
+    }
+
+    if (review.userId !== currentUserId) return res.status(403).json({ message: "Forbidden"});
+
+
+      const imageCount = await ReviewImage.count({
+        where: {
+          reviewId: review.id
+        }
+      });
+
+      const maxImages = 10;
+
+      if (imageCount >= maxImages) {
+        return res.status(403).json({ message: "Maximum number of images for this resource was reached" });
+      }
+
+      const newReviewImage = await ReviewImage.create({
+        reviewId: review.id,
+        url
+      });
+
+      const updatedReviewImage = {
+        id: newReviewImage.id,
+        url: newReviewImage.url
+    };
+
+
+      return res.status(200).json(updatedReviewImage);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.delete('/:review_id/images/:image_id', requireAuth, async (req, res, next) => {
+    try {
+      const currentUserId = req.user.id;
+      const reviewId = req.params.review_id;
+      const imageId = req.params.image_id;
+
+      const review = await Review.findOne({
+        where: {
+          id: reviewId,
+          userId: req.user.id
+        }
+      });
+      console.log(review);
+
+
+      if (!review) {
+          return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        if (review.userId !== currentUserId) return res.status(403).json({ message: "Forbidden" });
+
+        const reviewImage = await ReviewImage.findOne({
+        where: {
+          id: imageId,
+          reviewId: review.id
+        }
+      });
+
+      if (!reviewImage) {
+        return res.status(404).json({ message: "Review Image couldn't be found" });
+      }
+
+      await reviewImage.destroy();
+
+      return res.status(200).json({ message: "Successfully deleted" });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  module.exports = router;
 
 
 module.exports = router;
