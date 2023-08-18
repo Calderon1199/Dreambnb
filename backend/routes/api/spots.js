@@ -1,4 +1,4 @@
-const { Spot, Booking, User } = require('../../db/models');
+const { Spot, Booking, User, SpotImage } = require('../../db/models');
 const { Op } = require('sequelize');
 const router = require('express').Router();
 const validateBooking = require('../../utils/validators/bookings');
@@ -161,17 +161,14 @@ router.post('/:spot_id/bookings', requireAuth, validateBooking, async (req, res)
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
 
-    // Check if the spot belongs to the current user
     if (spot.ownerId === userId) {
         return res.status(403).json({ message: "You cannot book your own spot" });
     }
 
-    // Check if endDate is on or before startDate
     if (new Date(endDate) <= new Date(startDate)) {
         return res.status(400).json({ message: "Bad Request", errors: { endDate: "endDate cannot be on or before startDate" } });
     }
 
-    // Check for booking conflicts
     const existingBookings = await Booking.findAll({
         where: {
             spotId: spotId,
@@ -215,6 +212,78 @@ router.post('/:spot_id/bookings', requireAuth, validateBooking, async (req, res)
 
     res.status(200).json(booking);
 });
+
+router.post('/:spot_id/images', requireAuth, async (req, res, next) => {
+    try {
+      const spotId = req.params.spot_id;
+      const { url, preview } = req.body;
+
+      const spot = await Spot.findOne({
+        where: {
+          id: spotId,
+          ownerId: req.user.id
+        }
+      });
+
+      if (!spot) {
+        return res.status(404).json({ message: "Spot couldn't be found" });
+      }
+
+      const newSpotImage = await SpotImage.create({
+        spotId: spot.id,
+        url,
+        preview
+      });
+
+      newSpotImage.setDataValue('preview', preview);
+
+      const updatedSpotImage = {
+        id: newSpotImage.id,
+        url: newSpotImage.url,
+        preview
+    };
+
+      return res.status(200).json(updatedSpotImage);
+    } catch (error) {
+      next(error);
+    }
+});
+
+router.delete('/:spot_id/images/:image_id', requireAuth, async (req, res, next) => {
+    try {
+        const spotId = req.params.spot_id;
+        const imageId = req.params.image_id;
+
+        const spot = await Spot.findOne({
+            where: {
+                id: spotId,
+                ownerId: req.user.id
+            }
+        });
+
+        if (!spot) {
+            return res.status(404).json({ message: "Forbidden" });
+        }
+
+        const spotImage = await SpotImage.findOne({
+            where: {
+                id: imageId,
+                spotId: spot.id
+            }
+        });
+
+        if (!spotImage) {
+            return res.status(404).json({ message: "Spot Image couldn't be found" });
+        }
+
+        await spotImage.destroy();
+
+        return res.status(200).json({ message: "Successfully deleted" });
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;
 
