@@ -215,19 +215,22 @@ router.post('/:spot_id/bookings', requireAuth, validateBooking, async (req, res)
 
 router.post('/:spot_id/images', requireAuth, async (req, res, next) => {
     try {
+        const currentUserId = req.user.id;
       const spotId = req.params.spot_id;
       const { url, preview } = req.body;
 
       const spot = await Spot.findOne({
         where: {
           id: spotId,
-          ownerId: req.user.id
         }
       });
 
       if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
       }
+
+      if (spot.ownerId !== currentUserId) return res.status(403).json({ message: "Forbidden"});
+
 
       const newSpotImage = await SpotImage.create({
         spotId: spot.id,
