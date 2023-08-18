@@ -35,7 +35,7 @@ router.get('/:spot_id/reviews', async (req, res) => {
 });
 
 router.post('/:spot_id/reviews', requireAuth, validateReview, async (req, res) => {
-    const spotId = req.params.spot_id;
+    const spotId = parseInt(req.params.spot_id);
     const spot = await Spot.findByPk(spotId);
     const userId = req.user.id;
     const { review, stars } = req.body;
@@ -61,11 +61,13 @@ router.post('/:spot_id/reviews', requireAuth, validateReview, async (req, res) =
     res.status(201).json(newReview);
 });
 
-router.put('/:review_id', requireAuth, async (req, res) => {
+router.put('/:review_id', requireAuth, validateReview, async (req, res) => {
     const currentUserId = req.user.id;
     const reviewId = req.params.review_id;
     const userReview = await Review.findByPk(reviewId);
     const { review, stars } = req.body;
+
+    if (!review) return res.status(400).json()
 
     if (!userReview) return res.status(404).json({ message: "Review couldn't be found." });
 
@@ -85,7 +87,7 @@ router.delete('/:review_id', requireAuth, async (req, res) => {
     const currentUserId = req.user.id;
     const review = await Review.findByPk(reviewId);
 
-    if (!review) return res.status(403).json({ message: "Review could not be found. "})
+    if (!review) return res.status(404).json({ message: "Review could not be found. "})
 
     if (review.userId !== currentUserId) return res.status(403).json({ message: "Forbidden"});
 
