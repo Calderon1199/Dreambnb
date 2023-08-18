@@ -4,6 +4,7 @@ const signupRouter = require('./signup');
 const currentUserRouter = require('./currentUser');
 const spotsRouter = require('./spots');
 const reviewsRouter = require('./reviews');
+const bookingsRouter = require('./bookings');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
 
@@ -11,8 +12,12 @@ router.use(restoreUser);
 router.use('/login', loginRouter);
 router.use('/signup', signupRouter);
 router.use('/current_user', currentUserRouter);
+
+router.use('/users', bookingsRouter);
 router.use('/spots', spotsRouter, reviewsRouter);
 router.use('/reviews', reviewsRouter);
+
+router.use('/bookings', bookingsRouter);
 
 // router.get('/set-token-cookie', async (_req, res) => {
 //   const user = await User.findOne({
