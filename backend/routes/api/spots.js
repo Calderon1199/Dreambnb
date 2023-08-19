@@ -221,6 +221,29 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
         res.status(201).json(spot);
 })
 
+router.put('/:spot_id', requireAuth, validateSpot, async (req, res) => {
+    const spotId = req.params.spot_id;
+    const userId = req.user.id;
+    const newData = req.body;
+
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) return res.status(404).json({ message: "Spot not found" });
+
+    if (spot.ownerId !== userId) {
+        return res.status(403).json({ message: "Forbidden" });
+    };
+
+    const newSpot = {
+        id: spotId,
+        ownerId: userId,
+        ...newData,
+        createdAt: spot.createdAt,
+        updatedAt: new Date().toISOString(),
+    }
+
+    res.json(newSpot);
+});
 
 
 router.delete('/:spot_id', requireAuth, validateSpot, async (req, res) => {
