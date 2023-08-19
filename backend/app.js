@@ -10,7 +10,6 @@ const cookieParser = require('cookie-parser');
 
 //  IMPORTS -- INTERNAL
 const { environment } = require('./config');
-const { production } = require('./config/database');
 const isProduction = environment === 'production';
 const routes = require('./routes');
 
@@ -70,19 +69,19 @@ app.use((_req, _res, next) => {
     res.status(err.status || 500);
     console.error(err);
 
-    const opt = isProduction ? {stack: err.stack} : {}
+
 
     if (err.title === 'Login failed') {
       return res.json({
         message: err.errors.message,
-        ...opt
       });
     }
     res.json({
       // title: err.title || 'Server Error',
       message: err.message,
       errors: err.errors,
-      ...opt
+
+      // stack: isProduction ? err.stack : null
     });
   });
 //  EXPORTS
