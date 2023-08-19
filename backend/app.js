@@ -70,7 +70,8 @@ app.use((_req, _res, next) => {
     res.status(err.status || 500);
     console.error(err);
 
-    let opt = isProduction ? {stack: err.stack} : {}
+    const opt = isProduction ? {stack: err.stack} : {}
+
     if (err.title === 'Login failed') {
       return res.json({
         message: err.errors.message,

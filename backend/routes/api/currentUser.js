@@ -4,7 +4,7 @@ const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
 
-router.get('/', requireAuth, (req, res) => {
+router.get('/', (req, res) => {
     const { user } = req;
     if (user) {
       const safeUser = user.toSafeUser()
