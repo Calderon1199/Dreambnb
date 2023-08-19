@@ -13,14 +13,17 @@ module.exports = {
       {
         url: 'https://example.com/image1.jpg',
         spotId: 1,
+        preview: true
       },
       {
         url: 'https://example.com/image2.jpg',
         spotId: 2,
+        preview: false
       },
       {
         url: 'https://example.com/image3.jpg',
         spotId: 3,
+        preview: true
       },
     ], {});
 

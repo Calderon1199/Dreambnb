@@ -1,25 +1,59 @@
-const { Booking, Spot } = require('../../db/models');
+const { Booking, Spot, SpotImage } = require('../../db/models');
 const router = require('express').Router();
 const { Op } = require('sequelize');
 const validateBooking = require('../../utils/validators/bookings');
 const { requireAuth } = require('../../utils/auth');
 
-router.get('/:user_id/bookings', requireAuth, async (req, res) => {
-    const userId = req.params.user_id;
-    const userBookings = await Booking.findAll({
-        where: {
-            userId: userId
-        },
-        include: [
-            {
-              model: Spot,
-              attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price' ]
-            }
-          ]
-    })
+router.get('/:user_id/bookings', requireAuth, async (req, res, next) => {
+    const currentUserId = req.user.id;
+    try {
+        const bookings = await Booking.findAll({
+            where: { userId: currentUserId },
+            include: [
+                {
+                    model: Spot,
+                    attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+                    include: [
+                        {
+                            model: SpotImage,
+                            attributes: ['url'],
+                            where: { preview: true },
+                            required: false
+                        }
+                    ]
+                }
+            ]
+        });
 
-    res.json({ Bookings: userBookings })
+        const formattedBookings = bookings.map(booking => ({
+            id: booking.id,
+            spotId: booking.spotId,
+            Spot: {
+                id: booking.Spot.id,
+                ownerId: booking.Spot.ownerId,
+                address: booking.Spot.address,
+                city: booking.Spot.city,
+                state: booking.Spot.state,
+                country: booking.Spot.country,
+                lat: booking.Spot.lat,
+                lng: booking.Spot.lng,
+                name: booking.Spot.name,
+                price: booking.Spot.price,
+                previewImage: booking.Spot.SpotImages.length > 0 ? booking.Spot.SpotImages[0].url : null
+            },
+            userId: booking.userId,
+            startDate: booking.startDate,
+            endDate: booking.endDate,
+            createdAt: booking.createdAt,
+            updatedAt: booking.updatedAt
+        }));
+
+        res.status(200).json({ Bookings: formattedBookings });
+    } catch (error) {
+        next(error);
+    }
 });
+
 
 router.put('/:booking_id', requireAuth, validateBooking, async (req, res) => {
     const userId = req.user.id;
@@ -44,8 +78,6 @@ router.put('/:booking_id', requireAuth, validateBooking, async (req, res) => {
 
     const currentDate = new Date().toISOString();
     const bookingEndDate = new Date(booking.endDate);
-    console.log(currentDate);
-    console.log(booking.endDate, '--------');
     if (bookingEndDate.toISOString() < currentDate) {
         return res.status(403).json({ message: "Past bookings can't be modified" });
     }
