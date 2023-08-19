@@ -80,6 +80,21 @@ router.get('/', async (req, res) => {
 
 });
 
+router.get('/user', requireAuth, async (req, res) => {
+    const currentUser = req.user;
+
+    const ownedSpots = await Spot.findAll({
+        where: {
+          ownerId: currentUser.id
+        }
+      });
+
+
+    res.status(200).json({
+      Spots: ownedSpots
+    });
+})
+
 
 router.get('/:spot_id', async (req, res, next) => {
     try {
@@ -142,7 +157,7 @@ router.get('/:spot_id', async (req, res, next) => {
       }
 });
 
-router.post('/user', requireAuth, validateSpot, async (req, res) => {
+router.post('/', requireAuth, validateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const newPrice = parseInt(price);
     const newLat = parseFloat(lat);
