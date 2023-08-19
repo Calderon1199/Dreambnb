@@ -9,53 +9,77 @@ const validateSpot = require('../../utils/validators/spots');
 
 
 router.get('/', async (req, res, next) => {
-    const { page = 1, size = 20, ...filterParams } = req.query;
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  const queryOptions = {
-    offset: (page - 1) * size,
-    limit: size,
-    where: { ...filterParams } // Apply any additional filtering based on query parameters
-  };
+if (!page) page = 1;
+if (!size) size = 20;
+if (page > 10) size = 1;
+if (size > 20) size = 20;
+page = parseInt(page);
+size = parseInt(size);
 
-  try {
-    const { count, rows: spots } = await Spot.findAndCountAll(queryOptions);
+let pag = {};
 
-    const responseSpots = await Promise.all(
-      spots.map(async spot => {
-        const avgRating = await Review.findOne({
-          attributes: [[sequelize.fn('avg', sequelize.col('stars')), 'avgRating']],
-          where: { spotId: spot.id }
+if (page !== 0 && size !==0) {
+    pag.limit = size;
+    pag.offset = size * (page - 1);
+}
+
+const where = {};
+
+if (minPrice) where.price = {[Op.gte]: maxPrice};
+if (maxPrice) where.price = {...where.price, [Op.lte]: maxPrice};
+if (minLat) where.lat = {[Op.gte]: minLat};
+if (maxLat) where.lat = {...where.lat, [Op.lte]: maxLat};
+if (minLng) where.lng = {[Op.gte]: minLng};
+if (maxLng) where.lng = {...where.lng, [Op.lte]: maxLng};
+
+try {
+    const spots = await Spot.findAll({
+        include: [
+            {
+                model: Review,
+                attributes: []
+            }
+        ],
+        where,
+        ...pag,
+    });
+
+    for (let spot of spots) {
+        const previewImage = await SpotImage.findOne({
+            attributes: ["url"],
+            where: {spotId: spot.id, preview: true}
         });
 
-        const spotImages = await SpotImage.findAll({
-          attributes: ['url', 'preview'],
-          where: { spotId: spot.id }
+        if (previewImage) spot.dataValues.previewImage = previewImage.dataValues.url;
+
+        const spotRating = await Spot.findByPk(spot.id, {
+            include: [
+                {
+                    model: Review,
+                    attributes: [],
+                }
+            ],
+            attributes: ["id", "ownerId", "address", "city", "state", "country", "lat", "lng", "name", "description", "price", "createdAt", "updatedAt",
+                        [sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars")), 1), "avgRating"] ],
+            group: ["Spot.id"]
         });
 
-        return {
-          id: spot.id,
-          ownerId: spot.ownerId,
-          address: spot.address,
-          city: spot.city,
-          state: spot.state,
-          country: spot.country,
-          lat: spot.lat,
-          lng: spot.lng,
-          name: spot.name,
-          description: spot.description,
-          price: parseInt(spot.price),
-          createdAt: spot.createdAt,
-          updatedAt: spot.updatedAt,
-          avgRating: avgRating ? avgRating.get('avgRating') : null,
-          previewImage: spotImages.find(image => image.preview === 1)?.url || null
-        };
-      })
-    );
+        const avgRating = spotRating.dataValues.avgRating;
 
-    return res.status(200).json({ Spots: responseSpots, page: parseInt(page), size: parseInt(size) });
-  } catch (error) {
-    next(error);
-  }
+        if (spotRating) spot.dataValues.avgRating = avgRating;
+    }
+
+    return res.status(200).json({
+        Spots: spots,
+        page: page,
+        size: size
+    });
+    } catch (error) {
+        next(error)
+    }
+
 });
 
 
