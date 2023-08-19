@@ -9,89 +9,53 @@ const validateSpot = require('../../utils/validators/spots');
 
 
 router.get('/', async (req, res, next) => {
-    const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    const { page = 1, size = 20, ...filterParams } = req.query;
 
-    if (isNaN(parseInt(page)) || parseInt(page) < 1 ||
-        isNaN(parseInt(size)) || parseInt(size) < 1) {
-        return res.status(400).json({
-            message: "Bad Request",
-            errors: {
-                page: "Page must be greater than or equal to 1",
-                size: "Size must be greater than or equal to 1"
-            }
+  const queryOptions = {
+    offset: (page - 1) * size,
+    limit: size,
+    where: { ...filterParams } // Apply any additional filtering based on query parameters
+  };
+
+  try {
+    const { count, rows: spots } = await Spot.findAndCountAll(queryOptions);
+
+    const responseSpots = await Promise.all(
+      spots.map(async spot => {
+        const avgRating = await Review.findOne({
+          attributes: [[sequelize.fn('avg', sequelize.col('stars')), 'avgRating']],
+          where: { spotId: spot.id }
         });
-    }
 
-    try {
-        const queryOptions = {
-            offset: (page - 1) * size,
-            limit: parseInt(size),
-            include: [
-                {
-                    model: SpotImage,
-                    attributes: ['url', 'preview']
-                },
-                {
-                    model: Review,
-                    attributes: [[sequelize.fn('avg', sequelize.col('stars')), 'avgRating']],
-                    required: false
-                }
-            ],
-            group: ['Spot.id'],
-            raw: true
+        const spotImages = await SpotImage.findAll({
+          attributes: ['url', 'preview'],
+          where: { spotId: spot.id }
+        });
+
+        return {
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          description: spot.description,
+          price: parseInt(spot.price),
+          createdAt: spot.createdAt,
+          updatedAt: spot.updatedAt,
+          avgRating: avgRating ? avgRating.get('avgRating') : null,
+          previewImage: spotImages.find(image => image.preview === 1)?.url || null
         };
+      })
+    );
 
-        if (minLat && maxLat) {
-            queryOptions.where = { ...queryOptions.where, lat: { [Op.between]: [parseFloat(minLat), parseFloat(maxLat)] } };
-        }
-
-        if (minLng && maxLng) {
-            queryOptions.where = { ...queryOptions.where, lng: { [Op.between]: [parseFloat(minLng), parseFloat(maxLng)] } };
-        }
-
-        if (minPrice && maxPrice) {
-            queryOptions.where = { ...queryOptions.where, price: { [Op.between]: [parseFloat(minPrice), parseFloat(maxPrice)] } };
-        }
-
-        const { count, rows: spots } = await Spot.findAndCountAll(queryOptions);
-
-
-        const responseSpots = spots.map(spot => {
-            const responseSpot = {
-                id: spot.id,
-                ownerId: spot.ownerId,
-                address: spot.address,
-                city: spot.city,
-                state: spot.state,
-                country: spot.country,
-                lat: spot.lat,
-                lng: spot.lng,
-                name: spot.name,
-                description: spot.description,
-                price: parseInt(spot.price),
-                createdAt: spot.createdAt,
-                updatedAt: spot.updatedAt,
-                avgRating: spot['Reviews.avgRating'] || null
-            };
-            const isPreview = spot['SpotImages.preview'] === 1;
-
-            if (isPreview) {
-                responseSpot.previewImage = spot['SpotImages.url'];
-            } else {
-                responseSpot.previewImage = null;
-            }
-
-            return responseSpot;
-        });
-
-        res.status(200).json({
-            Spots: responseSpots,
-            page: parseInt(page),
-            size: parseInt(size),
-        });
-    } catch (error) {
-        next(error);
-    }
+    return res.status(200).json({ Spots: responseSpots, page: parseInt(page), size: parseInt(size) });
+  } catch (error) {
+    next(error);
+  }
 });
 
 
