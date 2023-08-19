@@ -142,7 +142,7 @@ router.get('/:spot_id', async (req, res, next) => {
       }
 });
 
-router.post('/', requireAuth, validateSpot, async (req, res) => {
+router.post('/user', requireAuth, validateSpot, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     const newPrice = parseInt(price);
     const newLat = parseFloat(lat);
