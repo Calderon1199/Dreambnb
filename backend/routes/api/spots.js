@@ -82,45 +82,55 @@ router.get('/', async (req, res) => {
 
 router.get('/user', requireAuth, async (req, res, next) => {
     try {
-        const currentUserId = req.user.id;
-
+        const userId = req.user.id;
         const spots = await Spot.findAll({
           where: {
-            ownerId: currentUserId
-          },
-          include: [
-            {
-              model: Review,
-              attributes: [[sequelize.fn('avg', sequelize.col('stars')), 'avgRating']],
-              duplicating: false
-            },
-            {
-              model: SpotImage,
-              attributes: ['url'],
-              limit: 1
-            }
-          ]
+            ownerId: userId
+        },
+          attributes: [
+            "id",
+            ["ownerId", "ownerId"],
+            "address",
+            "city",
+            "state",
+            "country",
+            "lat",
+            "lng",
+            "name",
+            "description",
+            "price",
+            "createdAt",
+            "updatedAt"
+          ],
         });
 
-        const formattedSpots = spots.map(spot => ({
-          id: spot.id,
-          ownerId: spot.ownerId,
-          address: spot.address,
-          city: spot.city,
-          state: spot.state,
-          country: spot.country,
-          lat: spot.lat,
-          lng: spot.lng,
-          name: spot.name,
-          description: spot.description,
-          price: spot.price,
-          createdAt: spot.createdAt,
-          updatedAt: spot.updatedAt,
-          avgRating: spot.Reviews[0]?.dataValues.avgRating,
-          previewImage: spot.SpotImages[0]?.url
-        }));
+        const result = [];
 
-        return res.status(200).json({ Spots: formattedSpots });
+        for (const spot of spots) {
+          const spotData = spot.toJSON();
+
+          const spotRating = await spot.getReviews({
+            attributes: [
+              [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('stars')), 1), 'avgRating']
+            ],
+            required: false
+          });
+
+          const spotImg = await spot.getSpotImages({
+            where: { preview: true },
+            attributes: [
+              ['url', 'previewImage']
+            ],
+            required: false,
+          });
+
+          spotData.avgRating = spotRating[0]?.dataValues.avgRating ?? null;
+          spotData.previewImage = spotImg[0]?.dataValues?.previewImage ?? null;
+
+          result.push(spotData);
+        }
+
+        return res.status(200).json({ Spots: result });
       } catch (error) {
         next(error);
       }
