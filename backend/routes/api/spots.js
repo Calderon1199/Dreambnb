@@ -246,7 +246,7 @@ router.put('/:spot_id', requireAuth, validateSpot, async (req, res) => {
 });
 
 
-router.delete('/:spot_id', requireAuth, validateSpot, async (req, res) => {
+router.delete('/:spot_id', requireAuth, async (req, res) => {
     const spotId = req.params.spot_id;
     const userId = req.user.id;
 
