@@ -8,7 +8,7 @@ const validateSpot = require('../../utils/validators/spots');
 
 
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
     if (!page || page > 10) page = 1
     if (!size || size > 20) size = 20
@@ -54,7 +54,7 @@ router.get('/', async (req, res, next) => {
             "updatedAt"
         ]
     })
-    const payload = []
+    const result = []
     for (let i = 0; i < spots.length; i++) {
         const spot = spots[i]
         const spotData = spot.toJSON()
@@ -74,11 +74,12 @@ router.get('/', async (req, res, next) => {
         spotData.avgRating = spotRating[0].dataValues.avgRating
         if (!spotImg[0]) spotData.previewImage = null
         else spotData.previewImage = spotImg[0].dataValues['previewImage']
-        payload.push(spotData)
+        result.push(spotData)
     }
-    res.json({ "Spots": payload, page, size })
+    res.json({ "Spots": result, page, size })
 
 });
+
 
 router.get('/:spot_id', async (req, res, next) => {
     try {
@@ -140,6 +141,30 @@ router.get('/:spot_id', async (req, res, next) => {
         next(error);
       }
 });
+
+router.post('/', requireAuth, validateSpot, async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    const newPrice = parseInt(price);
+    const newLat = parseFloat(lat);
+    const newLng = parseFloat(lng);
+
+
+        const spot = await Spot.create({
+          ownerId: req.user.id,
+          address,
+          city,
+          state,
+          country,
+          lat: newLat,
+          lng: newLng,
+          name,
+          description,
+          price: newPrice
+        });
+
+        res.status(201).json(spot);
+})
+
 
 
 router.delete('/:spot_id', requireAuth, validateSpot, async (req, res) => {
