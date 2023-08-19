@@ -80,19 +80,50 @@ router.get('/', async (req, res) => {
 
 });
 
-router.get('/user', requireAuth, async (req, res) => {
-    const currentUser = req.user;
+router.get('/user', requireAuth, async (req, res, next) => {
+    try {
+        const currentUserId = req.user.id;
 
-    const ownedSpots = await Spot.findAll({
-        where: {
-          ownerId: currentUser.id
-        }
-      });
+        const spots = await Spot.findAll({
+          where: {
+            ownerId: currentUserId
+          },
+          include: [
+            {
+              model: Review,
+              attributes: [[sequelize.fn('avg', sequelize.col('stars')), 'avgRating']],
+              duplicating: false
+            },
+            {
+              model: SpotImage,
+              attributes: ['url'],
+              limit: 1
+            }
+          ]
+        });
 
+        const formattedSpots = spots.map(spot => ({
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          description: spot.description,
+          price: spot.price,
+          createdAt: spot.createdAt,
+          updatedAt: spot.updatedAt,
+          avgRating: spot.Reviews[0]?.dataValues.avgRating,
+          previewImage: spot.SpotImages[0]?.url
+        }));
 
-    res.status(200).json({
-      Spots: ownedSpots
-    });
+        return res.status(200).json({ Spots: formattedSpots });
+      } catch (error) {
+        next(error);
+      }
 })
 
 
