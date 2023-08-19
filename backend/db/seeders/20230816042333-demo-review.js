@@ -28,6 +28,12 @@ module.exports = {
         review: "I love this place! The view is breathtaking.",
         stars: 4,
       },
+      {
+        userId: 3,
+        spotId: 3,
+        review: "I love this place! The view is breathtaking.",
+        stars: 5,
+      },
     ], {})
   },
 

@@ -18,7 +18,7 @@ module.exports = {
 
     return queryInterface.bulkInsert(options, [
       {
-        ownerId: allUsers[0].id, // Assign the first user as owner
+        ownerId: allUsers[0].id,
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
@@ -30,7 +30,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId: allUsers[1].id, // Assign the second user as owner
+        ownerId: allUsers[1].id,
         address: "456 Elm Street",
         city: "New York",
         state: "New York",
@@ -42,7 +42,7 @@ module.exports = {
         price: 321
       },
       {
-        ownerId: allUsers[2].id, // Assign the third user as owner
+        ownerId: allUsers[2].id,
         address: "789 Beach Road",
         city: "Los Angeles",
         state: "California",
@@ -53,7 +53,7 @@ module.exports = {
         description: "Famous pier with amusement park attractions",
         price: 98
       },
-      // Add more spot objects here
+
     ], {});
 
 },

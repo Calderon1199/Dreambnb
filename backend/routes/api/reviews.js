@@ -1,22 +1,70 @@
-const { Spot, User, Review, ReviewImage } = require('../../db/models');
+const { Spot, User, Review, ReviewImage, SpotImage } = require('../../db/models');
 const router = require('express').Router();
 const { requireAuth } = require('../../utils/auth');
 const validateReview = require('../../utils/validators/reviews');
 
+const { Sequelize } = require('sequelize');
+
 router.get('/users', requireAuth, async (req, res) => {
     const currentUserId = req.user.id;
-    const reviews = await Review.findAll({
-        where: {
-            userId: currentUserId
-        },
-        include: [
-            { model: User, attributes: ['id', 'firstName', 'lastName'] },
-            { model: Spot, attributes: { exclude: ['createdAt', 'updatedAt'] }, }
-        ]
-    });
+    try {
+        const reviews = await Review.findAll({
+            where: { userId: currentUserId },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    model: Spot,
+                    attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+                    include: [
+                        {
+                            model: SpotImage,
+                            attributes: ['url'],
+                            where: { preview: true },
+                            required: false
+                        }
+                    ]
+                },
+                {
+                    model: ReviewImage,
+                    attributes: ['id', 'url']
+                }
+            ]
+        });
 
-    res.json({ Reviews: reviews });
+        const formattedReviews = reviews.map(review => ({
+            id: review.id,
+            userId: review.userId,
+            spotId: review.spotId,
+            review: review.review,
+            stars: review.stars,
+            createdAt: review.createdAt,
+            updatedAt: review.updatedAt,
+            User: review.User,
+            Spot: {
+                id: review.Spot.id,
+                ownerId: review.Spot.ownerId,
+                address: review.Spot.address,
+                city: review.Spot.city,
+                state: review.Spot.state,
+                country: review.Spot.country,
+                lat: review.Spot.lat,
+                lng: review.Spot.lng,
+                name: review.Spot.name,
+                price: review.Spot.price,
+                previewImage: review.Spot.SpotImages.length > 0 ? review.Spot.SpotImages[0].url : null
+            },
+            ReviewImages: review.ReviewImages.length > 0 ? review.ReviewImages : null
+        }));
+
+        res.status(200).json({ Reviews: formattedReviews });
+    } catch (error) {
+        next(error);
+    }
 });
+
 
 router.get('/:spot_id/reviews', async (req, res) => {
     const spotId = req.params.spot_id;
@@ -25,7 +73,8 @@ router.get('/:spot_id/reviews', async (req, res) => {
             spotId: spotId
         },
         include: [
-            { model: User, attributes: ['id', 'firstName', 'lastName'] }
+            { model: User, attributes: ['id', 'firstName', 'lastName'] },
+            { model: ReviewImage, attributes: ['id', 'url' ] }
         ]
     });
 
@@ -156,7 +205,7 @@ router.post('/:review_id/images', requireAuth, async (req, res, next) => {
           userId: req.user.id
         }
       });
-      console.log(review);
+
 
 
       if (!review) {
