@@ -386,11 +386,15 @@ router.post('/:spot_id/images', requireAuth, async (req, res, next) => {
         preview
       });
 
+      console.log(newSpotImage);
+
       const updatedSpotImage = {
         id: newSpotImage.id,
         url: newSpotImage.url,
-        preview
+        preview: newSpotImage.preview
     };
+
+    console.log(updatedSpotImage);
 
       return res.status(200).json(updatedSpotImage);
     } catch (error) {
