@@ -183,7 +183,7 @@ router.get('/:spot_id', async (req, res, next) => {
           SpotImages: spotImages.map(image => ({
             id: image.id,
             url: image.url,
-            preview: image.preview === 1
+            preview: image.preview
           })),
           Owner: {
             id: owner.id,
@@ -386,7 +386,6 @@ router.post('/:spot_id/images', requireAuth, async (req, res, next) => {
         preview
       });
 
-      console.log(newSpotImage);
 
       const updatedSpotImage = {
         id: newSpotImage.id,
@@ -394,7 +393,6 @@ router.post('/:spot_id/images', requireAuth, async (req, res, next) => {
         preview: newSpotImage.preview
     };
 
-    console.log(updatedSpotImage);
 
       return res.status(200).json(updatedSpotImage);
     } catch (error) {
