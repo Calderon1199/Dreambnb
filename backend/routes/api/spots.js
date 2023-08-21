@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
         where,
         attributes: [
             "id",
-            ["id", "ownerId"],
+            "ownerId",
             "address",
             "city",
             "state",
