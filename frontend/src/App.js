@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
+import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 import * as sessionActions from "./store/session";
-import LoginFormPage from "./components/loginFormPage/index";
-import SignupFormPage from "./components/signup";
 import Navigation from "./components/Navigation";
 
 function App() {
@@ -16,16 +14,7 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {isLoaded && (
-        <Switch>
-          <Route path="/login">
-            <LoginFormPage />
-          </Route>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route>
-        </Switch>
-      )}
+      {isLoaded && <Switch></Switch>}
     </>
   );
 }
