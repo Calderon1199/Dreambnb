@@ -1,0 +1,12 @@
+.profile-button {
+    height: 40px;
+    width: 50px;
+    border-radius: 20%;
+    background-color: white;
+    border-width: 2px;
+    border-color: black;
+}
+
+.fas {
+    font-size: 20px;
+}
