@@ -7,6 +7,7 @@ const ContentCard = () => {
     const allSpotsObj = useSelector((state) => {
         return state.spots
     });
+    console.log(allSpotsObj);
     const allSpots = Object.values(allSpotsObj);
 
     useEffect(() => {
@@ -16,11 +17,7 @@ const ContentCard = () => {
     return (
         <>
         {allSpots.map((spot) => (
-                <div key={spot.id}>
-                    {/* Render each spot */}
-                    <h2>{spot.name}</h2>
-                    {/* Add more spot data as needed */}
-                </div>
+                    <h2>hello</h2>
             ))}
         </>
     )
