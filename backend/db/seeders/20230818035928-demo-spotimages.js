@@ -11,7 +11,7 @@ module.exports = {
 
     return queryInterface.bulkInsert(options, [
       {
-        url: 'https://example.com/image1.jpg',
+        url: 'https://png.pngtree.com/background/20230612/original/pngtree-an-example-of-a-modern-home-picture-image_3187702.jpg',
         spotId: 1,
         preview: true
       },

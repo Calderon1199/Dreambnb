@@ -1,3 +1,5 @@
+import { csrfFetch } from "./csrf";
+
 const LOAD_SPOTS = "spots/LOAD_SPOTS";
 
 const loadAll = (spots) => ({
@@ -5,13 +7,10 @@ const loadAll = (spots) => ({
     spots
 });
 
-const initialState = {
-    spots: [],
-}
+const initialState = {}
 
 export const getAllSpots = () => async (dispatch) => {
-    const response = await fetch("/api/spots");
-    console.log(response);
+    const response = await csrfFetch("/api/spots");
 
     if (response.ok) {
         const spots = await response.json();
@@ -22,18 +21,9 @@ export const getAllSpots = () => async (dispatch) => {
 export const spotReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS:
-            if (!Array.isArray(action.spots)) {
-                return state; // Return the current state if action.spots is not an array
-            }
-
-            const allSpots = {};
-            action.spots.forEach((spot) => {
-                allSpots[spot.id] = spot;
-            });
-
             return {
                 ...state,
-                ...allSpots
+                ...action.spots
             };
         default:
             return state;
