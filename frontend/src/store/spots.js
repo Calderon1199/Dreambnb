@@ -7,9 +7,7 @@ const loadAll = (spots) => ({
     spots
 });
 
-const initialState = {
-    spots: [],
-}
+const initialState = {}
 
 export const getAllSpots = () => async (dispatch) => {
     const response = await csrfFetch("/api/spots");

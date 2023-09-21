@@ -1,0 +1,26 @@
+.card-container {
+    display: flex;
+    margin: 100px 100px;
+}
+
+.card {
+    display: flex;
+    border: 1px solid black;
+    padding: 0;
+    margin: 20px;
+    width: 50%;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: grey;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card-image {
+    height: 70%;
+    width: 100%;
+}
