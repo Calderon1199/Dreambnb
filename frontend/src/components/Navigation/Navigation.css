@@ -3,9 +3,10 @@
 }
 .nav-bar {
     display: flex;
-    background-color: aqua;
     margin:1% 5% 0 5%;
     list-style-type: none;
     justify-content: space-between;
     align-items: center;
+    background-color: pink;
+    border-bottom: 2px solid lightgray;
 }
