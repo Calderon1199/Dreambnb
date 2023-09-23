@@ -7,6 +7,7 @@ import "./Navigation.css";
 function Navigation({ isLoaded }){
     const sessionUser = useSelector(state => state.session.user);
 
+
     return (
         <>
             <ul className="nav-bar">
@@ -15,6 +16,13 @@ function Navigation({ isLoaded }){
                     <img src="https://www.vectorlogo.zone/logos/airbnb/airbnb-ar21.svg" alt="logo"/>
                 </NavLink>
                 </li>
+                {isLoaded && sessionUser && (
+                    <li>
+                        <NavLink to="/spots/new" className="create-spot-button">
+                        Create a new spot
+                        </NavLink>
+                    </li>
+                )}
                 {isLoaded && (
                 <li>
                     <ProfileButton user={sessionUser} />
