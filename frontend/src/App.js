@@ -6,7 +6,8 @@ import Navigation from "./components/Navigation";
 import ContentCard from "./components/ContentCard";
 import SpotDetails from "./components/SpotDetails";
 import SpotForm from "./components/SpotForm";
-
+import EditSpotForm from "./components/EditSpotForm";
+import CurrentSpots from "./components/CurrentSpots";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,10 +23,16 @@ function App() {
         <Route exact path="/">
           <ContentCard />
         </Route>
-        <Route path="/spots/new" >
+        <Route exact path="/spots/new" >
           <SpotForm />
         </Route>
-        <Route path="/spots/:spotId" >
+        <Route exact path="/spots/user" >
+          <CurrentSpots />
+        </Route>
+        <Route exact path="/spots/:spotId/edit" >
+          <EditSpotForm />
+        </Route>
+        <Route exact path="/spots/:spotId" >
           <SpotDetails />
         </Route>
         </Switch>}
