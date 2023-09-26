@@ -1,8 +1,10 @@
 import { csrfFetch } from "./csrf";
+// import { DELETE_SPOT } from "./userSpots";
 
 const LOAD_SPOTS = "spots/LOAD_SPOTS";
 const CREATE_SPOT = "spot/CREATE_SPOTS";
 const ADD_IMAGE = "spots/ADD_IMAGE";
+
 
 //------------------CREATE------------------------
 
