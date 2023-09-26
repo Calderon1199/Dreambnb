@@ -8,8 +8,10 @@ const ContentCard = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const allSpotsObj = useSelector((state) => {
-        return state.spots.Spots
+        return state.spots
     });
+
+    console.log(allSpotsObj)
 
 
 
@@ -29,7 +31,7 @@ const ContentCard = () => {
 
     return (
         <div className="card-container">
-            {allSpotsObj.map((spot) => (
+            {Object.values(allSpotsObj).map((spot) => (
                     <div className="card" key={spot.address}>
                     <img src={spot.previewImage} alt={spot.name} className="card-image" />
                     <div className="card-info">

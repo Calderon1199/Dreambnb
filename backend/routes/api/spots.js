@@ -235,7 +235,7 @@ router.put('/:spot_id', requireAuth, validateSpot, async (req, res) => {
     };
 
     const newSpot = {
-        id: spotId,
+        id: +spotId,
         ownerId: userId,
         ...newData,
         createdAt: spot.createdAt,

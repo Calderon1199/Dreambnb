@@ -1,43 +1,36 @@
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { useState } from "react";
-import { createNewSpot } from "../../store/spots";
-import "./SpotForm.css"
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { getAllSpots, getSpotById } from "../../store/spots";
+import { useEffect, useState } from "react";
+import { getSingleSpot } from "../../store/oneSpot";
+import { editSpot } from "../../store/userSpots";
+// import { updateOldSpot } from "../../store/spots";
 
-const SpotForm = () => {
-    const dispatch = useDispatch();
+const EditSpotForm = () => {
     const history = useHistory();
-    const [country, setCountry] = useState("");
-    const [address, setAddress] = useState("");
-    const [state, setState] = useState("");
-    const [city, setCity] = useState("");
-    const [name, setName] = useState("");
-    const [lat, setLat] = useState("37.7645358");
-    const [lng, setLng] = useState("-122.4730327");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("0");
-    const [previewImage, setPreviewImage] = useState("");
+    const dispatch = useDispatch();
+    const { spotId } = useParams();
+    const spots = useSelector(state => state.userSpots);
+    const spot = spots[+spotId];
+
+    const [country, setCountry] = useState(spot?.country);
+    const [address, setAddress] = useState(spot?.address);
+    const [state, setState] = useState(spot?.state);
+    const [city, setCity] = useState(spot?.city);
+    const [name, setName] = useState(spot?.name);
+    const [lat, setLat] = useState(spot?.lat || "37.7645358");
+    const [lng, setLng] = useState(spot?.lng || "-122.4730327");
+    const [description, setDescription] = useState(spot?.description);
+    const [price, setPrice] = useState(spot?.price);
+    const [previewImage, setPreviewImage] = useState(spot?.previewImage);
     const [img1, setImg1] = useState("");
     const [img2, setImg2] = useState("");
     const [img3, setImg3] = useState("");
     const [img4, setImg4] = useState("");
 
-    const spotData = {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-      url: previewImage,
-      preview: true,
-    };
 
 
-
+    console.log('this is spot', spot);
 
     const [errors, setErrors] = useState({
         country: false,
@@ -49,72 +42,84 @@ const SpotForm = () => {
         lng: false,
         description: false,
         price: false,
-      });
+    });
 
-      const handleSubmit = async (e) => {
-      e.preventDefault();
 
-      // Dispatch the createNewSpot action with the formData
-      let newSpot = await dispatch(createNewSpot(spotData));
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-    // Redirect to the newly created spot's page
-    history.push(`/spots/${newSpot.id}`);
-};
+        const spotData = {
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price,
+          };
 
-// const handleInputChange = (e) => {
-//       const { name, value } = e.target;
-//       setFormData({
-//         ...formData,
-//         [name]: value,
-//       });
-//     };
+        dispatch(editSpot(spotData, +spotId));
+        console.log(spotData, 'this is spot data');
+        // Clear the form fields after submission (if needed)
+      // Redirect to the newly created spot's page
+      history.push(`/spots/user`);
+  };
 
-    const handleCreateClick = () => {
-        // Validate the form fields
-        const newErrors = {};
-    let hasErrors = false;
 
-    for (const idx in spotData) {
-        const value = spotData[idx];
+//   const handleCreateClick = async () => {
+//     // Validate the form fields
+//     const newErrors = {};
+//     let hasErrors = false;
 
-        // Check if the value is a string before calling trim
-        if (typeof value === 'string' && !value.trim()) {
-            newErrors[idx] = true;
-            hasErrors = true;
-        } else {
-            newErrors[idx] = false;
-        }
-    }
+//     for (const idx in spotData) {
+//     const value = spotData[idx];
 
-        // const imageFields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-        // imageFields.forEach((fieldName) => {
-        //     const imageUrl = spotData[fieldName].trim();
-        //     if (imageUrl && !/(?:\.png|\.jpg|\.jpeg)$/.test(imageUrl.toLowerCase())) {
-        //     newErrors[fieldName] = true;
-        //     hasErrors = true;
-        //     } else {
-        //     newErrors[fieldName] = false;
-        //     }
-        // });
+//     // Check if the value is a string before calling trim
+//         if (typeof value === 'string' && !value.trim()) {
+//             newErrors[idx] = true;
+//             hasErrors = true;
+//         } else {
+//             newErrors[idx] = false;
+//         }
+//     }
 
-        if (spotData.description.trim().length < 30) {
-            newErrors.description = true;
-            hasErrors = true;
-          }
+//     // const imageFields = ['image1', 'image2', 'image3', 'image4', 'image5'];
+//     // imageFields.forEach((fieldName) => {
+//     //     const imageUrl = formData[fieldName].trim();
+//     //     if (imageUrl && !/(?:\.png|\.jpg|\.jpeg)$/.test(imageUrl.toLowerCase())) {
+//     //     newErrors[fieldName] = true;
+//     //     hasErrors = true;
+//     //     } else {
+//     //     newErrors[fieldName] = false;
+//     //     }
+//     // });
 
-        if (hasErrors) {
-          setErrors(newErrors);
-        } else {
-          // Submit the form if all fields are filled
-          // Here you can make your API call to create a new spot
-          console.log('Form submitted:', spotData);
-        }
-      };
+//     if (spotData.description.trim().length < 30) {
+//         newErrors.description = true;
+//         hasErrors = true;
+//       }
+
+//     if (hasErrors) {
+//       setErrors(newErrors);
+//     } else {
+//         // Submit the form if all fields are filled
+//       // Here you can make your API call to create a new spot
+//       console.log('Form submitted:', spotData);
+//       history.push(`/spots/${spotId}`);
+//     }
+//   };
+
+// //   if (!spot) {
+// //       return <div>Loading...</div>; // or handle loading state appropriately
+// //   }
 
     return (
         <div className="form-container">
             <div className="form-intro">
-                <h1 className="new-spot-intro">Create a new spot</h1>
+                <h1 className="new-spot-intro">Update your Spot</h1>
                 <div className="intro-text-container">
                     <h3 className="intro-text" id="intro-text-1">Where's your place located?</h3>
                     <p className="intro-text">Guests will only get your exact address once they booked a reservation</p>
@@ -228,12 +233,12 @@ const SpotForm = () => {
     <h2 className="section-title">Liven up your spot with photos</h2>
     <p className="section-title-p">Submit links to at least one photo to publish your spot</p>
     <div className="image-input-container">
-      {[1, 2, 3, 4].map((index) => (
+      {[1, 2, 3, 4, 5].map((index) => (
         <div key={index}>
           <input
             type="text"
             name={`image${index}`} // Use unique names for each input
-            value={spotData[`image${index}`]}
+            value={[`image${index}`]}
             onChange={(e) => setPreviewImage(e.target.value)}
             placeholder={`Image ${index} url`}
             className="image-input"
@@ -251,7 +256,7 @@ const SpotForm = () => {
                 {/* Add input fields for other spot details */}
                 <div className="submit-container">
                     <div className="button-container">
-                        <button className="submit-button" type="submit" onClick={handleCreateClick}>Create Spot</button>
+                        <button className="submit-button" type="submit">Create Spot</button>
                     </div>
                 </div>
             </form>
@@ -259,4 +264,4 @@ const SpotForm = () => {
     );
 }
 
-export default SpotForm;
+export default EditSpotForm;
