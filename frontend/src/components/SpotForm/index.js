@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 import { createNewSpot } from "../../store/spots";
+import { addImageToSpot } from "../../store/spots";
 import "./SpotForm.css"
 
 const SpotForm = () => {
@@ -16,11 +17,8 @@ const SpotForm = () => {
     const [lng, setLng] = useState("-122.4730327");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("0");
-    const [previewImage, setPreviewImage] = useState("");
-    const [img1, setImg1] = useState("");
-    const [img2, setImg2] = useState("");
-    const [img3, setImg3] = useState("");
-    const [img4, setImg4] = useState("");
+    const [imageUrls, setImageUrls] = useState(["", "", "", ""]); // Array to store image URLs
+    const [previewImageIndex, setPreviewImageIndex] = useState(0);
 
     const spotData = {
       address,
@@ -32,8 +30,7 @@ const SpotForm = () => {
       name,
       description,
       price,
-      url: previewImage,
-      preview: true,
+      imageUrls
     };
 
 
@@ -51,11 +48,11 @@ const SpotForm = () => {
         price: false,
       });
 
-      const handleSubmit = async (e) => {
-      e.preventDefault();
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newSpot = await dispatch(createNewSpot(spotData));
 
-      // Dispatch the createNewSpot action with the formData
-      let newSpot = await dispatch(createNewSpot(spotData));
+
 
     // Redirect to the newly created spot's page
     history.push(`/spots/${newSpot.id}`);
@@ -68,6 +65,15 @@ const SpotForm = () => {
 //         [name]: value,
 //       });
 //     };
+
+const handleImageChange = (index, imageUrl) => {
+    const newImageUrls = [...imageUrls];
+    newImageUrls[index] = imageUrl;
+    setImageUrls(newImageUrls);
+
+    // Set the previewImageIndex to the current index
+    setPreviewImageIndex(index);
+  };
 
     const handleCreateClick = () => {
         // Validate the form fields
@@ -233,12 +239,11 @@ const SpotForm = () => {
           <input
             type="text"
             name={`image${index}`} // Use unique names for each input
-            value={spotData[`image${index}`]}
-            onChange={(e) => setPreviewImage(e.target.value)}
+            value={imageUrls[`image${index}`]}
             placeholder={`Image ${index} url`}
             className="image-input"
-
-          />
+            onChange={(e) => handleImageChange(index, e.target.value)}
+            />
           {errors[`image${index}`] && (
             <div className="error">Preview url is required</div>
           )}

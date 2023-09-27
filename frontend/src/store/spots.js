@@ -34,7 +34,7 @@ const addImages = (url) => {
     //----------------READ--------------------------
 
 
-    export const addImageToSpot = (spotId, imageUrl) => async (dispatch) => {
+export const addImageToSpot = (spotId, imageUrl) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +85,17 @@ const spotReducer = (state = initialState, action) => {
         case CREATE_SPOT:
             newState = {...state}
             newState[action.payload.id] = action.payload
+        return newState;
+        case ADD_IMAGE:
+            const { spotId, imageUrl } = action.payload;
+            newState = { ...state };
+            // Find the spot by spotId and add the imageUrl to it
+            if (newState[spotId]) {
+                newState[spotId] = {
+                ...newState[spotId],
+                images: [...newState[spotId].images, imageUrl], // assuming you have an 'images' property in your spot object
+                };
+            }
         return newState;
         default:
             return state;

@@ -15,7 +15,6 @@ const CurrentSpots = () => {
 
     useEffect(() => {
         if (sessionUser) {
-            const userId = sessionUser.id
             dispatch(getUserSpots())
                 .then(() => setIsLoaded(true))
         }
