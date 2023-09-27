@@ -61,8 +61,8 @@ const EditSpotForm = () => {
             price,
           };
 
-        dispatch(editSpot(spotData, +spotId));
-        console.log(spotData, 'this is spot data');
+          dispatch(editSpot(spotData, +spotId));
+          console.log(spotData, 'this is spot data');
         // Clear the form fields after submission (if needed)
       // Redirect to the newly created spot's page
       history.push(`/spots/user`);

@@ -234,15 +234,23 @@ router.put('/:spot_id', requireAuth, validateSpot, async (req, res) => {
         return res.status(403).json({ message: "Forbidden" });
     };
 
-    const newSpot = {
-        id: +spotId,
-        ownerId: userId,
-        ...newData,
-        createdAt: spot.createdAt,
-        updatedAt: new Date().toISOString(),
-    }
+    // const newSpot = {
+    //     id: +spotId,
+    //     ownerId: userId,
+    //     ...newData,
+    //     createdAt: spot.createdAt,
+    //     updatedAt: new Date().toISOString(),
+    // }
 
-    res.json(newSpot);
+    // res.json(newSpot);
+    await spot.update({
+      // Update the spot attributes with newData properties
+      ...newData,
+  });
+
+  const updatedSpot = await Spot.findByPk(spotId);
+
+  res.json(updatedSpot);
 });
 
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { getUserSpots } from "../../store/userSpots";
+import { deleteUserSpot, getUserSpots } from "../../store/userSpots";
 // import { getAllSpots, getSpotById } from "../../store/spots";
 
 const CurrentSpots = () => {
@@ -15,7 +15,6 @@ const CurrentSpots = () => {
 
     useEffect(() => {
         if (sessionUser) {
-            const userId = sessionUser.id
             dispatch(getUserSpots())
                 .then(() => setIsLoaded(true))
         }
@@ -28,6 +27,13 @@ const CurrentSpots = () => {
     const handleCreateSpot = () => {
         history.push(`/spots/new`);
     };
+
+    const handleDeleteSpot = (e, spotId) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dispatch(deleteUserSpot(spotId))
+    }
 
     const handleEditSpot = (e, spotId) => {
         e.preventDefault();
@@ -58,7 +64,7 @@ const CurrentSpots = () => {
                     </div>
                     <div>
                         <button onClick={(e) => { handleEditSpot(e, spot.id) }}>Update a spot</button>
-                        <button onClick={handleCreateSpot}>Delete a spot</button>
+                        <button onClick={(e) => { handleDeleteSpot(e, spot.id) }}>Delete a spot</button>
                     </div>
                   </div>
             ))}
