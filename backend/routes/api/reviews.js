@@ -78,7 +78,12 @@ router.get('/:spot_id/reviews', async (req, res) => {
         ]
     });
 
-    if (!allReviews.length) return res.status(404).json({ "message": "Spot could not be found"});
+
+    if (!allReviews) return res.status(404).json({ "message": "Spot could not be found"});
+
+    if (allReviews.length === 0) {
+      return res.status(200).json({ "message": "Spot has no reviews" });
+    }
 
     res.json({ Reviews: allReviews });
 });

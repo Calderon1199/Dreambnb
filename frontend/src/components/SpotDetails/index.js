@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllReviews } from "../../store/reviews";
-import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { getSingleSpot } from "../../store/oneSpot";
+import { useModal } from "../../context/Modal";
 
 const SpotDetails = () => {
     const { spotId } = useParams();
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
-    // const reviews = useSelector((state) => state.reviews.Reviews);
+    const reviews = useSelector((state) => Object.values(state.reviews));
     const spot = useSelector(state => state.singleSpot.spot);
+    const { closeModal } = useModal();
+    console.log(reviews);
 
 
     useEffect(() => {
         dispatch(getSingleSpot(+spotId))
-        // dispatch(getAllReviews(spotId))
+        dispatch(getAllReviews(+spotId))
         .then(() => {
             // Data fetching completed, set isLoading to false
             setIsLoading(false);
@@ -26,9 +29,7 @@ const SpotDetails = () => {
         return <div>Loading...</div>;
     };
 
-    // const spot = spots.find(spot => spot.id === +spotId)
-
-
+    const hasReviews = reviews.length > 0;
 
 
     return ( <>
@@ -42,15 +43,21 @@ const SpotDetails = () => {
             <p>{spot.description}</p>
             <p>{spot.price}</p>
 
-            {/* {reviews && reviews.length > 0 && (
+            {hasReviews ? (
                 <div>
                     {reviews.map((review) => (
                     <div key={review.id}>
                         <p>{review.review}</p>
                     </div>
                     ))}
+
                 </div>
-            )} */}
+                ) : (
+                <div>
+                    <h1>New Review</h1>
+                    <button >Create a Review</button>
+                </div>
+            )}
         </>
     );
 }
