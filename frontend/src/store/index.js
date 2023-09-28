@@ -10,8 +10,8 @@ const rootReducer = combineReducers({
     session: sessionReducer,
     spots: spotReducer,
     userSpots: userSpotReducer,
-    singleSpot: singleSpotReducer
-    // reviews: reviewReducer
+    singleSpot: singleSpotReducer,
+    reviews: reviewReducer
 });
 
 let enhancer;
