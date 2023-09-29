@@ -11,7 +11,6 @@ const SpotDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const reviews = useSelector((state) => Object.values(state.reviews));
     const spot = useSelector(state => state.singleSpot.spot);
-    const { closeModal } = useModal();
     console.log(reviews);
 
 

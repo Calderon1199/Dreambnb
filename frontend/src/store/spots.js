@@ -26,7 +26,7 @@ const createSpot = (spotData) => {
 const addImages = (url) => {
     return {
         type: ADD_IMAGE,
-        url
+        url,
     }
 }
 
@@ -34,15 +34,26 @@ const addImages = (url) => {
     //----------------READ--------------------------
 
 
-export const addImageToSpot = (spotId, imageUrl) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(imageUrl),
-    });
-    const newImage = await response.json();
-    dispatch(addImages(newImage));
-    return newImage;
+export const addImageToSpot = (spotId, imageUrl, preview) => async (dispatch, getState) => {
+    try {
+        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: imageUrl, preview: preview }),
+        });
+
+        if (response.ok) {
+          const newImage = await response.json();
+          dispatch(addImages(newImage));
+          return newImage;
+        } else {
+          console.error("Error adding image to spot:", response.statusText);
+          return null;
+        }
+      } catch (error) {
+        console.error("Error adding image to spot:", error);
+        return null;
+      }
   };
 
 
@@ -85,17 +96,6 @@ const spotReducer = (state = initialState, action) => {
         case CREATE_SPOT:
             newState = {...state}
             newState[action.payload.id] = action.payload
-        return newState;
-        case ADD_IMAGE:
-            const { spotId, imageUrl } = action.payload;
-            newState = { ...state };
-            // Find the spot by spotId and add the imageUrl to it
-            if (newState[spotId]) {
-                newState[spotId] = {
-                ...newState[spotId],
-                images: [...newState[spotId].images, imageUrl], // assuming you have an 'images' property in your spot object
-                };
-            }
         return newState;
         default:
             return state;
