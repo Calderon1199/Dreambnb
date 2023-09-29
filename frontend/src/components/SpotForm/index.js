@@ -17,8 +17,12 @@ const SpotForm = () => {
     const [lng, setLng] = useState("-122.4730327");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("0");
-    const [imageUrls, setImageUrls] = useState(["", "", "", ""]); // Array to store image URLs
-    const [previewImageIndex, setPreviewImageIndex] = useState(0);
+    const [previewImageUrl, setPreviewImageUrl] = useState('');
+    const [imageUrl1, setImageUrl1] = useState('');
+    const [imageUrl2, setImageUrl2] = useState('');
+    const [imageUrl3, setImageUrl3] = useState('');
+    const [imageUrl4, setImageUrl4] = useState('');
+
 
     const spotData = {
       address,
@@ -30,13 +34,14 @@ const SpotForm = () => {
       name,
       description,
       price,
-      imageUrls
+      url: previewImageUrl,
+      preview: true
     };
 
 
 
 
-    const [errors, setErrors] = useState({
+const [errors, setErrors] = useState({
         country: false,
         address: false,
         city: false,
@@ -46,76 +51,34 @@ const SpotForm = () => {
         lng: false,
         description: false,
         price: false,
-      });
+        previewImageUrl: false,
+        image1Url: false,
+        image2Url: false,
+        image3Url: false,
+        image4Url: false,
+});
+
+const extraImages = [imageUrl1, imageUrl2, imageUrl3, imageUrl4];
 
 const handleSubmit = async (e) => {
     e.preventDefault();
     const newSpot = await dispatch(createNewSpot(spotData));
 
 
+    await dispatch(addImageToSpot(newSpot.id, previewImageUrl, spotData.preview))
+    .then(() => {
+        spotData.preview = false;
+    }).then(async() => {
+        for(let i = 0; i < extraImages.length; i++) {
+            if (extraImages[i] !== "") {
+                await dispatch(addImageToSpot(newSpot.id, extraImages[i], spotData.preview))
+            }
+        }
+    })
 
-    // Redirect to the newly created spot's page
     history.push(`/spots/${newSpot.id}`);
 };
 
-// const handleInputChange = (e) => {
-//       const { name, value } = e.target;
-//       setFormData({
-//         ...formData,
-//         [name]: value,
-//       });
-//     };
-
-const handleImageChange = (index, imageUrl) => {
-    const newImageUrls = [...imageUrls];
-    newImageUrls[index] = imageUrl;
-    setImageUrls(newImageUrls);
-
-    // Set the previewImageIndex to the current index
-    setPreviewImageIndex(index);
-  };
-
-    const handleCreateClick = () => {
-        // Validate the form fields
-        const newErrors = {};
-    let hasErrors = false;
-
-    for (const idx in spotData) {
-        const value = spotData[idx];
-
-        // Check if the value is a string before calling trim
-        if (typeof value === 'string' && !value.trim()) {
-            newErrors[idx] = true;
-            hasErrors = true;
-        } else {
-            newErrors[idx] = false;
-        }
-    }
-
-        // const imageFields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-        // imageFields.forEach((fieldName) => {
-        //     const imageUrl = spotData[fieldName].trim();
-        //     if (imageUrl && !/(?:\.png|\.jpg|\.jpeg)$/.test(imageUrl.toLowerCase())) {
-        //     newErrors[fieldName] = true;
-        //     hasErrors = true;
-        //     } else {
-        //     newErrors[fieldName] = false;
-        //     }
-        // });
-
-        if (spotData.description.trim().length < 30) {
-            newErrors.description = true;
-            hasErrors = true;
-          }
-
-        if (hasErrors) {
-          setErrors(newErrors);
-        } else {
-          // Submit the form if all fields are filled
-          // Here you can make your API call to create a new spot
-          console.log('Form submitted:', spotData);
-        }
-      };
 
     return (
         <div className="form-container">
@@ -233,30 +196,48 @@ const handleImageChange = (index, imageUrl) => {
   <label>
     <h2 className="section-title">Liven up your spot with photos</h2>
     <p className="section-title-p">Submit links to at least one photo to publish your spot</p>
-    <div className="image-input-container">
-      {[1, 2, 3, 4].map((index) => (
-        <div key={index}>
-          <input
-            type="text"
-            name={`image${index}`} // Use unique names for each input
-            value={imageUrls[`image${index}`]}
-            placeholder={`Image ${index} url`}
-            className="image-input"
-            onChange={(e) => handleImageChange(index, e.target.value)}
-            />
-          {errors[`image${index}`] && (
-            <div className="error">Preview url is required</div>
-          )}
-        </div>
-      ))}
-    </div>
+    <input
+          name="previewImg"
+          placeholder="Preview Image URL"
+          value={previewImageUrl}
+          onChange={(e) => setPreviewImageUrl(e.target.value)}
+        />
+        {errors.previewImageUrl && <p className="error">{errors.previewImageUrl}</p>}
+        <input
+          name="Img1"
+          placeholder="Image URL"
+          value={imageUrl1}
+          onChange={(e) => setImageUrl1(e.target.value)}
+        />
+        {errors.image1Url && <p className="error">{errors.image1Url}</p>}
+        <input
+          name="Img2"
+          placeholder="Image URL"
+          value={imageUrl2}
+          onChange={(e) => setImageUrl2(e.target.value)}
+        />
+        {errors.image2Url && <p className="error">{errors.image2Url}</p>}
+        <input
+          name="Img3"
+          placeholder="Image URL"
+          value={imageUrl3}
+          onChange={(e) => setImageUrl3(e.target.value)}
+        />
+        {errors.image3Url && <p className="error">{errors.image3Url}</p>}
+        <input
+          name="Img4"
+          placeholder="Image URL"
+          value={imageUrl4}
+          onChange={(e) => setImageUrl4(e.target.value)}
+        />
+        {errors.image4Url && <p className="error">{errors.image4Url}</p>}
   </label>
 </div>
 
                 {/* Add input fields for other spot details */}
                 <div className="submit-container">
                     <div className="button-container">
-                        <button className="submit-button" type="submit" onClick={handleCreateClick}>Create Spot</button>
+                        <button className="submit-button" type="submit">Create Spot</button>
                     </div>
                 </div>
             </form>

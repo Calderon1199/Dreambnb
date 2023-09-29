@@ -112,10 +112,6 @@ const EditSpotForm = () => {
 //     }
 //   };
 
-// //   if (!spot) {
-// //       return <div>Loading...</div>; // or handle loading state appropriately
-// //   }
-
     return (
         <div className="form-container">
             <div className="form-intro">
