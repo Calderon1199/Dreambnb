@@ -32,8 +32,8 @@ const ContentCard = () => {
     return (
         <div className="card-container">
             {Object.values(allSpotsObj).map((spot) => (
-                <Link to={`/spots/${spot.id}`} key={spot.id} className="card-link">
-                    <div className="card" key={spot.address}>
+                <div className="card" key={spot.address}>
+                    <Link to={`/spots/${spot.id}`} key={spot.id} className="card-link">
                     <img src={spot.previewImage} alt={spot.name} className="card-image" />
                     <div className="card-info">
                       <div className="card-details">
@@ -49,8 +49,8 @@ const ContentCard = () => {
                     <div className="tooltip">
                         {spot.name}
                     </div>
-                  </div>
                 </Link>
+                  </div>
             ))}
         </div>
     )
