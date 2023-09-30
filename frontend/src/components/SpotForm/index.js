@@ -22,6 +22,7 @@ const SpotForm = () => {
     const [imageUrl2, setImageUrl2] = useState('');
     const [imageUrl3, setImageUrl3] = useState('');
     const [imageUrl4, setImageUrl4] = useState('');
+    const [errors, setErrors] = useState({});
 
 
     const spotData = {
@@ -41,28 +42,32 @@ const SpotForm = () => {
 
 
 
-const [errors, setErrors] = useState({
-        country: false,
-        address: false,
-        city: false,
-        state: false,
-        name: false,
-        lat: false,
-        lng: false,
-        description: false,
-        price: false,
-        previewImageUrl: false,
-        image1Url: false,
-        image2Url: false,
-        image3Url: false,
-        image4Url: false,
-});
+    const extraImages = [imageUrl1, imageUrl2, imageUrl3, imageUrl4];
 
-const extraImages = [imageUrl1, imageUrl2, imageUrl3, imageUrl4];
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        let errorsObj = {}
+        if (!country) errorsObj.country = "Country is required"
+        if (!address) errorsObj.address = "Address is required"
+        if (!city) errorsObj.city = "City is required"
+        if (!state) errorsObj.state = "State is required"
+        if (!lat) errorsObj.lat = "Latitude is required"
+        if (!lng) errorsObj.lng = "Longitude is required"
+        if (description.length < 30) errorsObj.description = "Description needs a minimum of 30 characters"
+        if (!name) errorsObj.name = "Name is required"
+        if (!price) errorsObj.price = "Price is required"
+        if (!previewImageUrl) errorsObj.previewImageUrl = "Preview image is required."
+        if (previewImageUrl && (!previewImageUrl.endsWith('.png') && !previewImageUrl.endsWith('.jpg') && !previewImageUrl.endsWith('.jpeg'))) errorsObj.previewImageUrl = "Image URL must end in .png, .jpg, or .jpeg"
+        if (imageUrl1 && !imageUrl1.endsWith('.png') && !imageUrl1.endsWith('.jpg') && !imageUrl1.endsWith('.jpeg')) errorsObj.image1Url = "Image URL must end in .png, .jpg, or .jpeg"
+        if (imageUrl2 && !imageUrl2.endsWith('.png') && !imageUrl2.endsWith('.jpg') && !imageUrl2.endsWith('.jpeg')) errorsObj.image2Url = "Image URL must end in .png, .jpg, or .jpeg"
+        if (imageUrl3 && !imageUrl3.endsWith('.png') && !imageUrl3.endsWith('.jpg') && !imageUrl3.endsWith('.jpeg')) errorsObj.image3Url = "Image URL must end in .png, .jpg, or .jpeg"
+        if (imageUrl4 && !imageUrl4.endsWith('.png') && !imageUrl4.endsWith('.jpg') && !imageUrl4.endsWith('.jpeg')) errorsObj.image4Url = "Image URL must end in .png, .jpg, or .jpeg"
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newSpot = await dispatch(createNewSpot(spotData));
+        if (Object.values(errorsObj).length) {
+            return setErrors(errorsObj)
+        }
+
+        const newSpot = await dispatch(createNewSpot(spotData));
 
 
     await dispatch(addImageToSpot(newSpot.id, previewImageUrl, spotData.preview))
@@ -89,7 +94,7 @@ const handleSubmit = async (e) => {
                     <p className="intro-text">Guests will only get your exact address once they booked a reservation</p>
                 </div>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
                 <div className="location-container">
                     <label className="country-address-input">
                         Country

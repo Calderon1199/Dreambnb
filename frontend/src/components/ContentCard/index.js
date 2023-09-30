@@ -35,10 +35,12 @@ const ContentCard = () => {
                     <div className="card" key={spot.address}>
                     <img src={spot.previewImage} alt={spot.name} className="card-image" />
                     <div className="card-info">
-                      <h2 className="card-title">{spot.name}</h2>
                       <div className="card-details">
                         <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
-                        <p className="card-rating">{spot.avgRating}</p>
+                        <div className="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <p className="card-rating">{spot.avgRating}</p>
+                        </div>
                       </div>
                       <p className="card-price">{`$${spot.price} per night`}</p>
                       {/* Add more spot data as needed */}

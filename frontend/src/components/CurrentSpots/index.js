@@ -5,6 +5,7 @@ import { deleteUserSpot, getUserSpots } from "../../store/userSpots";
 import DeleteSpotModal from "../DeleteSpotModal";
 import OpenModalButton from "../OpenModalButton";
 import { useModal } from "../../context/Modal";
+import { getSingleSpot } from "../../store/oneSpot";
 
 
 const CurrentSpots = () => {
@@ -54,6 +55,7 @@ const CurrentSpots = () => {
     const handleEditSpot = (e, spotId) => {
         e.preventDefault();
         e.stopPropagation();
+        dispatch(getSingleSpot(+spotId));
         history.push(`/spots/${spotId}/edit`);
     };
 

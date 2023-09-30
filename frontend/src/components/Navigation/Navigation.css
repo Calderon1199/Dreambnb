@@ -3,10 +3,18 @@
 }
 .nav-bar {
     display: flex;
-    margin:1% 5% 0 5%;
+    margin: 0 auto;
     list-style-type: none;
     justify-content: space-between;
     align-items: center;
-    background-color: pink;
     border-bottom: 2px solid lightgray;
+}
+
+.create-spot-button {
+    color: black;
+    margin-right: 0;
+}
+
+.nav-links {
+    list-style: none;
 }
