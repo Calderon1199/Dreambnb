@@ -10,7 +10,8 @@
   background-color: white;
   grid-template-areas:
   "pic1 pic2 pic4"
-    "pic1 pic3 pic5";
+  "pic1 pic3 pic5";
+  border-top: none;
 }
 
 .image-container img {
@@ -73,6 +74,7 @@
     width: 50%;
     align-items: center;
 }
+
 
 .review-intro-container {
     display: flex;

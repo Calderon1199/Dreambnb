@@ -1,0 +1,41 @@
+.card-container {
+    display: grid;
+    border: none;
+    justify-content: center;
+    grid-template-columns: repeat(4, 20%);
+    grid-gap: 20px;
+    margin: 25px auto;
+}
+.user-spots-intro {
+    margin: 0 8%;
+}
+.card {
+    margin: 0;
+    display: flex;
+}
+
+.card-title {
+    margin: 5px
+}
+
+.card-location {
+   margin: 0;
+   height: 30px
+}
+
+.card-details {
+    margin: 0;
+    height: 30px
+ }
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.card-image {
+    border: 2px solid black;
+    height: 90%;
+    width: 100%;
+}
