@@ -16,19 +16,21 @@ function Navigation({ isLoaded }){
                     <img src="https://www.vectorlogo.zone/logos/airbnb/airbnb-ar21.svg" alt="logo"/>
                 </NavLink>
                 </li>
-                {isLoaded && sessionUser && (
+                <div className="profile-menu-2">
+                    {isLoaded && sessionUser && (
 
-                    <li className="nav-links">
-                        <NavLink to="/spots/new" className="create-spot-button">
-                        Create a new spot
-                        </NavLink>
+                        <li className="nav-links2">
+                            <NavLink to="/spots/new" className="create-spot-button">
+                            Create a new spot
+                            </NavLink>
+                        </li>
+                    )}
+                    {isLoaded && (
+                    <li className="nav-links2">
+                        <ProfileButton user={sessionUser} />
                     </li>
-                )}
-                {isLoaded && (
-                <li className="nav-links">
-                    <ProfileButton user={sessionUser} />
-                </li>
-                )}
+                    )}
+                </div>
             </ul>
         </>
     );
