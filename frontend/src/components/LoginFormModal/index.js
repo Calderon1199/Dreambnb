@@ -4,7 +4,6 @@ import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
-import { getUserSpots } from "../../store/userSpots";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -31,10 +30,15 @@ function LoginFormModal() {
 
   const handleDemoLogin = (e) => {
     e.preventDefault();
-    closeModal()
-    dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))
-    dispatch(getUserSpots())
-    .then(closeModal);
+    setErrors({});
+    return dispatch(sessionActions.login({ credential: "Demo-lition", password: "password"}))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
   };
 
   return (

@@ -13,8 +13,8 @@ const CurrentSpots = () => {
     const dispatch = useDispatch();
     const sessionUser = useSelector(state => state.session.user)
     const spots = useSelector(state => state.userSpots);
-    const userId = useSelector(state => state.session.user.id);
     const [isLoaded, setIsLoaded] = useState(false);
+    const userId = useSelector(state => state.session.user.id);
     const [isDeleteSpotModalOpen, setIsDeleteSpotModalOpen] = useState(false);
     const { closeModal } = useModal();
 
@@ -24,11 +24,9 @@ const CurrentSpots = () => {
             dispatch(getUserSpots())
                 .then(() => setIsLoaded(true))
         }
-    }, [dispatch, isLoaded, sessionUser])
+    }, [dispatch])
 
-    if (!spots || spots.length === 0 || !sessionUser) {
-        return <div>Loading...</div>;
-    }
+
 
     const openDeleteSpotModal = () => {
         setIsDeleteSpotModalOpen(true);
@@ -60,8 +58,11 @@ const CurrentSpots = () => {
     };
 
 
-    const usersSpots = Object.values(spots).filter(spot => spot.ownerId === userId)
-
+    if (!spots || spots.length === 0) {
+        return <div>Loading...</div>;
+    }
+    const usersSpots = Object.values(spots);
+    console.log(usersSpots, '----------')
     return (
         <div>
             <div>
