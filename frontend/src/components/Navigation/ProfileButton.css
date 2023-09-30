@@ -1,13 +1,17 @@
-.profile-button {
-    height: 40px;
-    width: 50px;
-    border-radius: 20%;
-    background-color: white;
-    border-width: 2px;
-    border-color: black;
-    color: black;
+.profile-menu {
+    background-color: aqua;
+    margin-right: 30px;
 }
 
-.fas {
-    font-size: 20px;
+.profile-dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    list-style: none;
+    background-color: slateblue;
+    position: absolute;
+    right: 2%;
+    top: 8%;
+    height: 15%;
 }

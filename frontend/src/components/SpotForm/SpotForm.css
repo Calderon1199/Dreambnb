@@ -51,14 +51,15 @@ textarea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 15%;
+    height: 17%;
 }
 
 .country-address-input {
+    background-color: aqua;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 22%
+    height: 15%
 }
 
 .city-state-container {

@@ -28,6 +28,24 @@ module.exports = {
         startDate: '2023-1-21',
         endDate: '2023-10-20',
       },
+      {
+        spotId: 4,
+        userId: 4,
+        startDate: '2023-11-10',
+        endDate: '2023-11-15',
+      },
+      {
+        spotId: 5,
+        userId: 5,
+        startDate: '2023-12-05',
+        endDate: '2023-12-15',
+      },
+      {
+        spotId: 1,
+        userId: 6,
+        startDate: '2023-11-25',
+        endDate: '2023-12-05',
+      },
     ], {});
   },
 

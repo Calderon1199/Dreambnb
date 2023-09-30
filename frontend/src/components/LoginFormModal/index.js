@@ -12,6 +12,9 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  const isInvalid = credential.length < 4 || password.length < 6;
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -23,6 +26,13 @@ function LoginFormModal() {
           setErrors(data.errors);
         }
       });
+  };
+
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    closeModal()
+      return dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))
+      .then(closeModal);
   };
 
   return (
@@ -50,7 +60,8 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={isInvalid}>Log In</button>
+        <button type="button" onClick={(e) => handleDemoLogin(e)}>Log in as Demo User</button>
       </form>
     </>
   );

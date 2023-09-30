@@ -1,26 +1,39 @@
 .card-container {
-    display: flex;
-    margin: 100px 100px;
+    display: grid;
+    border: none;
+    justify-content: center;
+    grid-template-columns: repeat(4, 20%);
+    grid-gap: 20px;
+    margin: 15px auto;
+
 }
 
 .card {
-    display: flex;
-    border: 1px solid black;
+    border: none;
     padding: 0;
     margin: 20px;
-    width: 50%;
+    width: 100%;
     flex-direction: column;
     justify-content: space-between;
-    background-color: grey;
 }
 
 .card-details {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
 }
 
 .card-image {
-    height: 70%;
+    height: 90%;
     width: 100%;
+}
+
+.card-price {
+    margin: 0;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
 }

@@ -8,6 +8,7 @@ import ReviewModal from "../ReviewModal";
 import { useModal } from "../../context/Modal";
 import OpenModalButton from "../OpenModalButton";
 import DeleteReviewModal from "../DeleteReviewModal";
+import "./SpotDetails.css";
 
 const SpotDetails = () => {
     const { spotId } = useParams();
@@ -16,12 +17,12 @@ const SpotDetails = () => {
     const reviews = useSelector((state) => Object.values(state.reviews));
     const spot = useSelector(state => state.singleSpot.spot);
     const userId = useSelector(state => state.session.user.id);
-    const hasReviews = reviews.length > 0;
+    const hasReviews = reviews.find(review => review.userId === userId);
     const { closeModal } = useModal();
+    const [images, setImages] = useState(spot?.SpotImages);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
     const [reviewToDelete, setReviewToDelete] = useState(null);
-
     useEffect(() => {
         dispatch(getSingleSpot(+spotId))
         dispatch(getAllReviews(+spotId))
@@ -29,6 +30,11 @@ const SpotDetails = () => {
             setIsLoading(false);
         })
     }, [dispatch, spotId, isLoading]);
+
+    useEffect(() => {
+        if (!isLoading && spot) {
+            setImages(spot.SpotImages || "")
+    }}, [isLoading, spot]);
 
     const openReviewModal = (review) => {
         setIsReviewModalOpen(true);
@@ -79,25 +85,55 @@ const SpotDetails = () => {
 
 
 
-    return ( <>
+    return ( <div className="details-container">
             <div>
                 <h1>{spot.name}</h1>
                 <h4>{spot.city}, {spot.state}, {spot.country}</h4>
             </div>
-            <div>
-                <img src={spot.previewImage}/>
+            {images && images.length > 0 && (
+                <div className="image-container">
+                    {images.map((image) => (
+                    <div key={image.id} className={`pic${image.id}`}>
+                        <img src={`${image.url}`} alt={`Image ${image.id}`} />
+                    </div>
+                    ))}
+                </div>
+            )}
+            <h2>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
+            <div className="details-text-container">
+                <div className="description">
+                    <p>{spot.description}</p>
+                </div>
+                <div className="reserve">
+                    <div className="price">
+                            <p>${spot.price} / Night</p>
+                    </div>
+                    <div className="star-review-container">
+                        <div className="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <p>{spot.avgStarRating}</p>
+                        </div>
+                        <div className="review">
+                            <p>{spot.numReviews} Reviews</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p>{spot.description}</p>
-            <p>{spot.price}</p>
+                            <div className="review-intro-container">
+                                <div className="star-review">
+                                    <i class="fa-solid fa-star"></i>
+                                    <h4>{spot.avgStarRating}</h4>
+                                </div>
+                                <div>
+                                    <h4>{spot.numReviews} Reviews</h4>
+                                </div>
+                            </div>
+
 
             {hasReviews ? (
                 <div>
                     {reviews.map((review) => (
                         <div key={review.id}>
-                            <div>
-                                <p>{review.stars}</p>
-                                <p>{reviews.length}</p>
-                            </div>
                             <div>
                                 <p>{review.review}</p>
                                 {review.userId === userId && (
@@ -119,8 +155,7 @@ const SpotDetails = () => {
 
                 </div>
                 ) : (
-                <div>
-                    <h1>New Review</h1>
+                <div className="creat-review-button">
                     <OpenModalButton
                         modalComponent={<ReviewModal
                             isOpen={isReviewModalOpen}
@@ -129,12 +164,33 @@ const SpotDetails = () => {
 
                         />
                     }
-                        buttonText="Create a Review"
+                        buttonText="Post Your Review"
                         onClick={openReviewModal}
                     />
+                    {reviews.map((review) => (
+                        <div key={review.id}>
+                            <div>
+                                <p>{review.review}</p>
+                                {review.userId === userId && (
+                                    <OpenModalButton
+                                        modalComponent={<DeleteReviewModal
+                                        isOpen={isDeleteReviewModalOpen}
+                                        onClose={closeDeleteReviewModal}
+                                        onSubmit={handleDeleteReview}
+
+                                    />
+                                }
+                                    buttonText="Delete a Review"
+                                    onClick={() => openDeleteReviewModal(review)}
+                                />
+                                )}
+                            </div>
+                        </div>
+                    ))}
+
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

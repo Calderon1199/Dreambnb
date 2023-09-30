@@ -1,17 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { getAllSpots, getSpotById } from "../../store/spots";
 import { useEffect, useState } from "react";
 import { getSingleSpot } from "../../store/oneSpot";
 import { editSpot } from "../../store/userSpots";
+import { addImageToSpot } from "../../store/spots";
 // import { updateOldSpot } from "../../store/spots";
 
 const EditSpotForm = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const { spotId } = useParams();
-    const spots = useSelector(state => state.userSpots);
-    const spot = spots[+spotId];
+    const spot = useSelector(state => state.singleSpot.spot);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [country, setCountry] = useState(spot?.country);
     const [address, setAddress] = useState(spot?.address);
@@ -22,14 +22,37 @@ const EditSpotForm = () => {
     const [lng, setLng] = useState(spot?.lng || "-122.4730327");
     const [description, setDescription] = useState(spot?.description);
     const [price, setPrice] = useState(spot?.price);
-    const [previewImage, setPreviewImage] = useState(spot?.previewImage);
-    const [img1, setImg1] = useState("");
-    const [img2, setImg2] = useState("");
-    const [img3, setImg3] = useState("");
-    const [img4, setImg4] = useState("");
+    const [previewImage, setPreviewImage] = useState(spot?.SpotImages[0].url);
+    const [extraImages, setExtraImages] = useState(spot?.SpotImages);
 
 
+    useEffect(() => {
+        dispatch(getSingleSpot(+spotId))
+        .then(() => {
+            setIsLoading(false);
+        })
+    }, [dispatch, spotId, isLoading]);
 
+    console.log(extraImages, '---------------')
+    useEffect(() => {
+        if (!isLoading && spot) {
+            setCountry(spot.country || "");
+            setAddress(spot.address || "");
+            setState(spot.state || "");
+            setCity(spot.city || "");
+            setName(spot.name || "");
+            setLat(spot.lat || "");
+            setLng(spot.lng || "");
+            setDescription(spot.description || "");
+            setPrice(spot.price || "");
+            setPreviewImage(spot?.SpotImages[0].url || "");
+            setExtraImages(spot.SpotImages || "");
+        }
+    }, [isLoading, spot]);
+
+
+    const imageId = (spot?.SpotImages.find(img => img.preview === true).id);
+    console.log(imageId, '-----------imageid')
     console.log('this is spot', spot);
 
     const [errors, setErrors] = useState({
@@ -63,14 +86,17 @@ const EditSpotForm = () => {
 
           dispatch(editSpot(spotData, +spotId));
           console.log(spotData, 'this is spot data');
-        // Clear the form fields after submission (if needed)
-      // Redirect to the newly created spot's page
-      history.push(`/spots/user`);
-  };
+          // Clear the form fields after submission (if needed)
+          // Redirect to the newly created spot's page
+          history.push(`/spots/${spotId}`);
+        };
 
+        if (isLoading || !extraImages) {
+            return <div>Loading...</div>;
+        };
 
-//   const handleCreateClick = async () => {
-//     // Validate the form fields
+        //   const handleCreateClick = async () => {
+            //     // Validate the form fields
 //     const newErrors = {};
 //     let hasErrors = false;
 
@@ -229,22 +255,61 @@ const EditSpotForm = () => {
     <h2 className="section-title">Liven up your spot with photos</h2>
     <p className="section-title-p">Submit links to at least one photo to publish your spot</p>
     <div className="image-input-container">
-      {[1, 2, 3, 4, 5].map((index) => (
-        <div key={index}>
-          <input
-            type="text"
-            name={`image${index}`} // Use unique names for each input
-            value={[`image${index}`]}
-            onChange={(e) => setPreviewImage(e.target.value)}
-            placeholder={`Image ${index} url`}
-            className="image-input"
-
-          />
-          {errors[`image${index}`] && (
-            <div className="error">Preview url is required</div>
-          )}
-        </div>
-      ))}
+    <label>
+    <h2 className="section-title">Liven up your spot with photos</h2>
+    <p className="section-title-p">Submit links to at least one photo to publish your spot</p>
+    <input
+          name="previewImg"
+          placeholder={previewImage}
+          value={previewImage}
+          onChange={(e) => setPreviewImage(e.target.value)}
+        />
+        {errors.previewImage && <p className="error">{errors.previewImage}</p>}
+        <input
+          name="Img1"
+          placeholder={extraImages[1]?.url}
+          value={extraImages[1]?.url || ""}
+          onChange={(e) => {
+            const updatedExtraImages = [...extraImages];
+            updatedExtraImages[1] = {url: e.target.value, preview:false};
+            setExtraImages(updatedExtraImages);
+          }}
+        />
+        {errors.image1Url && <p className="error">{errors.image1Url}</p>}
+        <input
+          name="Img2"
+          placeholder={extraImages[2]?.url}
+          value={extraImages[2]?.url || ""}
+          onChange={(e) => {
+            const updatedExtraImages = [...extraImages];
+            updatedExtraImages[2] = {url: e.target.value, preview:false};
+            setExtraImages(updatedExtraImages);
+          }}
+        />
+        {errors.image2Url && <p className="error">{errors.image2Url}</p>}
+        <input
+          name="Img3"
+          placeholder={extraImages[3]?.url}
+          value={extraImages[3]?.url || ""}
+          onChange={(e) => {
+            const updatedExtraImages = [...extraImages];
+            updatedExtraImages[3] = {url: e.target.value, preview:false};
+            setExtraImages(updatedExtraImages);
+          }}
+        />
+        {errors.image3Url && <p className="error">{errors.image3Url}</p>}
+        <input
+          name="Img4"
+          placeholder={extraImages[4]?.url}
+          value={extraImages[4]?.url || ""}
+          onChange={(e) => {
+            const updatedExtraImages = [...extraImages];
+            updatedExtraImages[4] = {url: e.target.value, preview:false};
+            setExtraImages(updatedExtraImages);
+          }}
+        />
+        {errors.image4Url && <p className="error">{errors.image4Url}</p>}
+  </label>
     </div>
   </label>
 </div>

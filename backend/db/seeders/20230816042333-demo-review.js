@@ -11,15 +11,15 @@ module.exports = {
 
     return queryInterface.bulkInsert(options, [
       {
-        userId: 1,
+        userId: 3,
         spotId: 1,
         review: "This spot is amazing! I had a great time here.",
         stars: 5,
       },
       {
-        userId: 2,
-        spotId: 1,
-        review: "Average spot, nothing too special.",
+        userId: 3,
+        spotId: 2,
+        review: "Average spot, nothing too special plus they had this in the garage.",
         stars: 3,
       },
       {
@@ -29,11 +29,41 @@ module.exports = {
         stars: 4,
       },
       {
-        userId: 3,
+        userId: 1,
         spotId: 3,
         review: "I love this place! The view is breathtaking.",
         stars: 5,
       },
+      {
+        userId: 4,
+        spotId: 1,
+        review: "Great spot for a weekend getaway!",
+        stars: 4,
+      },
+      {
+        userId: 5,
+        spotId: 3,
+        review: "The best vacation spot ever!",
+        stars: 5,
+      },
+      {
+        userId: 1,
+        spotId: 4,
+        review: "Decent place, but could use some improvements.",
+        stars: 3,
+      },
+      {
+        userId: 1,
+        spotId: 4,
+        review: "Beautiful location, but a bit pricey.",
+        stars: 4,
+      },
+      {
+        userId: 3,
+        spotId: 5,
+        review: "I had an amazing time here! Highly recommend.",
+        stars: 5,
+      }
     ], {})
   },
 
