@@ -84,7 +84,6 @@ const SpotDetails = () => {
     };
 
 
-
     return ( <div className="details-container">
             <div>
                 <h1>{spot.name}</h1>
