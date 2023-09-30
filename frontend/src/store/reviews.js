@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const LOAD_REVIEWS = "reviews/LOAD_REVIEWS";
 const CREATE_REVIEW = "reviews/CREATE_REVIEW";
+const DELETE_REVIEW = "reviews/DELETE_REVIEW";
 
 
 const loadAllReviews = (reviews) => ({
@@ -14,6 +15,11 @@ const createReview = (newReview) => ({
     payload: newReview
 });
 
+const deleteReview = (reviewId) => ({
+    type: DELETE_REVIEW,
+    reviewId,
+});
+
 const initialState = {}
 
 export const getAllReviews = (spotId) => async (dispatch) => {
@@ -24,7 +30,6 @@ export const getAllReviews = (spotId) => async (dispatch) => {
         dispatch(loadAllReviews(reviews));
         return reviews;
     }  else if (response.status === 404) {
-    // Handle the case where there are no reviews
     return [];
     }
 }
@@ -41,6 +46,16 @@ export const createNewReview = (newReviewData, spotId) => async (dispatch) => {
         const newReview = await response.json();
         dispatch(createReview(newReview));
     }
+};
+
+export const deleteSpotReview = (reviewId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE'
+    });
+    const review = await response.json()
+    console.log(review, "this is review")
+    dispatch(deleteReview(reviewId))
+    return review;
 }
 
 export const reviewReducer = (state = initialState, action) => {
@@ -58,6 +73,10 @@ export const reviewReducer = (state = initialState, action) => {
             newState = {...state}
             newState[action.payload.id] = action.payload
         return newState;
+        case DELETE_REVIEW:
+            newState = {...state};
+            delete newState[action.reviewId];
+            return newState;
         default:
             return state;
     }
