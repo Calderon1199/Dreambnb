@@ -164,6 +164,8 @@ router.get('/:spot_id', async (req, res, next) => {
           attributes: ['id', 'firstName', 'lastName']
         });
 
+        const avgStarRating = reviews.length > 0 ? parseFloat(reviews[0].avgStarRating).toFixed(1) : null;
+
         const responseSpot = {
           id: spot.id,
           ownerId: spot.ownerId,
@@ -179,7 +181,7 @@ router.get('/:spot_id', async (req, res, next) => {
           createdAt: spot.createdAt,
           updatedAt: spot.updatedAt,
           numReviews: reviews.length > 0 ? reviews[0].numReviews : 0,
-          avgStarRating: reviews.length > 0 ? reviews[0].avgStarRating : null,
+          avgStarRating: avgStarRating,
           SpotImages: spotImages.map(image => ({
             id: image.id,
             url: image.url,

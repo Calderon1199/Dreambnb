@@ -4,14 +4,15 @@
     justify-content: center;
     grid-template-columns: repeat(4, 20%);
     grid-gap: 20px;
-    margin: 15px auto;
+    margin: 25px auto;
 
 }
 
 .card {
+    position: relative;
     border: none;
     padding: 0;
-    margin: 20px;
+    /* margin: 20px; */
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
@@ -36,4 +37,29 @@
 .stars {
     display: flex;
     align-items: center;
+}
+
+.tooltip {
+    visibility: hidden; /* Initially hidden */
+    position: absolute;
+    bottom: 50%; /* Position it above the card */
+    left: 50%;
+    transform: translateX(-50%); /* Center it horizontally */
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.card:hover .tooltip {
+    visibility: visible; /* Show the tooltip on card hover */
+}
+
+.card-link {
+    text-decoration: none;
+    color: black;
+
 }

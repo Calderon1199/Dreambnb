@@ -78,6 +78,10 @@ const SpotDetails = () => {
         }
 
     };
+    const formatDate = (dateString) => {
+        const options = { year: "numeric", month: "long" };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
 
     if (isLoading || !spot) {
         return <div>Loading...</div>;
@@ -107,13 +111,26 @@ const SpotDetails = () => {
                     <div className="price">
                             <p>${spot.price} / Night</p>
                     </div>
+                                    <div className="reserve-button">
+                                        <button onClick={() => alert("Feature Coming Soon...")}>RESERVE</button>
+                                    </div>
                     <div className="star-review-container">
                         <div className="rating">
-                            <i class="fa-solid fa-star"></i>
-                            <p>{spot.avgStarRating}</p>
+                            {reviews.length ? (
+                                <div className="rating-after">
+                                    <i class="fa-solid fa-star"></i>
+                                    <p>{spot.avgStarRating}</p>
+                                </div>
+                                ) : (
+                                    <></>
+                            )}
                         </div>
                         <div className="review">
-                            <p>{spot.numReviews} Reviews</p>
+                        {reviews.length ? (
+                            <h4>{spot.numReviews} Reviews</h4>
+                            ) : (
+                            <p>New</p>
+                        )}
                         </div>
                     </div>
                 </div>
@@ -121,11 +138,19 @@ const SpotDetails = () => {
                             <div className="review-intro-container">
                                 <div className="star-review">
                                     <i class="fa-solid fa-star"></i>
-                                    <h4>{spot.avgStarRating}</h4>
+                                {reviews.length ? (
+                                    <div>
+                                        <p>{spot.avgStarRating}</p>
+                                    </div>
+                                    ) : (
+                                <h2>New</h2>
+                                )}
                                 </div>
-                                <div>
-                                    <h4>{spot.numReviews} Reviews</h4>
-                                </div>
+                                {reviews.length ? (
+                            <h4>{spot.numReviews} Reviews</h4>
+                            ) : (
+                            <></>
+                        )}
                             </div>
 
 
@@ -134,6 +159,8 @@ const SpotDetails = () => {
                     {reviews.map((review) => (
                         <div key={review.id}>
                             <div>
+                            <h3>{review.User.firstName}</h3>
+                            <h3 className="date">{formatDate(review.createdAt)}</h3>
                                 <p>{review.review}</p>
                                 {review.userId === userId && (
                                     <OpenModalButton
@@ -151,7 +178,6 @@ const SpotDetails = () => {
                             </div>
                         </div>
                     ))}
-
                 </div>
                 ) : (
                 <div className="creat-review-button">
@@ -168,6 +194,8 @@ const SpotDetails = () => {
                     />
                     {reviews.map((review) => (
                         <div key={review.id}>
+                            <h3>{review.User.firstName}</h3>
+                            <h3 className="date">{formatDate(review.createdAt)}</h3>
                             <div>
                                 <p>{review.review}</p>
                                 {review.userId === userId && (
