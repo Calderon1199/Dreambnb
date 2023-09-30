@@ -89,7 +89,7 @@ const SpotDetails = () => {
 
 
     return ( <div className="details-container">
-            <div>
+            <div className="spot-details-container">
                 <h1>{spot.name}</h1>
                 <h4>{spot.city}, {spot.state}, {spot.country}</h4>
             </div>
@@ -159,7 +159,9 @@ const SpotDetails = () => {
                     {reviews.map((review) => (
                         <div key={review.id}>
                             <div>
-                            <h3>{review.User.firstName}</h3>
+                            {review.User && (
+                <h3>{review.User.firstName}</h3>
+            )}
                             <h3 className="date">{formatDate(review.createdAt)}</h3>
                                 <p>{review.review}</p>
                                 {review.userId === userId && (

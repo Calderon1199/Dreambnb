@@ -6,7 +6,7 @@ import DeleteSpotModal from "../DeleteSpotModal";
 import OpenModalButton from "../OpenModalButton";
 import { useModal } from "../../context/Modal";
 import { getSingleSpot } from "../../store/oneSpot";
-
+import "./CurrentSpots.css";
 
 const CurrentSpots = () => {
     const history = useHistory();
@@ -65,37 +65,39 @@ const CurrentSpots = () => {
     console.log(usersSpots, '----------')
     return (
         <div>
-            <div>
+            <div className="user-spots-intro">
                 <h1>Manage Your Spots</h1>
                 <button onClick={handleCreateSpot}>Create a spot</button>
             </div>
-            {usersSpots.map((spot) => (
-                <div className="card" key={spot.address}>
-                    <img src={spot.previewImage} alt={spot.name} className="card-image" />
-                    <div className="card-info">
-                        <h2 className="card-title">{spot.name}</h2>
-                    <div className="card-details">
-                        <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
-                        <p className="card-rating">{spot.avgRating}</p>
+            <div className="card-container">
+                {usersSpots.map((spot) => (
+                    <div className="card" key={spot.address}>
+                        <img src={spot.previewImage} alt={spot.name} className="card-image" />
+                        <div className="card-info">
+                            <h2 className="card-title">{spot.name}</h2>
+                        <div className="card-details">
+                            <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
+                            <p className="card-rating">{spot.avgRating}</p>
+                        </div>
+                        <p className="card-price">{`$${spot.price} / Night`}</p>
+                        {/* Add more spot data as needed */}
                     </div>
-                    <p className="card-price">{`$${spot.price} per night`}</p>
-                      {/* Add more spot data as needed */}
-                </div>
-                <div>
-                    <button onClick={(e) => { handleEditSpot(e, spot.id) }}>Update a spot</button>
-                </div>
-                <OpenModalButton
-                    modalComponent={<DeleteSpotModal
-                    isOpen={isDeleteSpotModalOpen}
-                    onClose={closeDeleteSpotModal}
-                    onSubmit={() => handleDeleteSpot(spot.id)}
+                    <div className="buttons">
+                        <button onClick={(e) => { handleEditSpot(e, spot.id) }}>Update a spot</button>
+                    <OpenModalButton
+                        modalComponent={<DeleteSpotModal
+                        isOpen={isDeleteSpotModalOpen}
+                        onClose={closeDeleteSpotModal}
+                        onSubmit={() => handleDeleteSpot(spot.id)}
+                        />
+                    }
+                    buttonText="Delete a Spot"
+                    onClick={() => openDeleteSpotModal(spot.id)}
                     />
-                }
-                buttonText="Delete a Review"
-                onClick={() => openDeleteSpotModal(spot.id)}
-                />
-                </div>
-            ))}
+                    </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

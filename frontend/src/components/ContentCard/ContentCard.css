@@ -9,9 +9,10 @@
 }
 
 .card {
-    position: relative;
+    position: flex;
     border: none;
-    padding: 0;
+    margin-bottom: 35px;
+    height: 100%;
     /* margin: 20px; */
     width: 100%;
     flex-direction: column;
@@ -26,7 +27,9 @@
 }
 
 .card-image {
-    height: 90%;
+    border: 2px solid black;
+    padding: none;
+    height: 100%;
     width: 100%;
 }
 
@@ -42,7 +45,7 @@
 .tooltip {
     visibility: hidden; /* Initially hidden */
     position: absolute;
-    bottom: 50%; /* Position it above the card */
+    top: -100px; /* Adjust the vertical position */
     left: 50%;
     transform: translateX(-50%); /* Center it horizontally */
     background-color: #333;
