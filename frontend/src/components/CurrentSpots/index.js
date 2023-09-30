@@ -91,7 +91,7 @@ const CurrentSpots = () => {
                     onSubmit={() => handleDeleteSpot(spot.id)}
                     />
                 }
-                buttonText="Create a Review"
+                buttonText="Delete a Review"
                 onClick={() => openDeleteSpotModal(spot.id)}
                 />
                 </div>
