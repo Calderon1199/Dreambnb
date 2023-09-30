@@ -11,7 +11,7 @@ const ContentCard = () => {
         return state.spots
     });
 
-    console.log(allSpotsObj)
+
 
 
 
@@ -25,7 +25,6 @@ const ContentCard = () => {
 
 
     if (isLoading) {
-        // Display a loading indicator or message while data is fetching
         return <div>Loading...</div>;
     }
 
