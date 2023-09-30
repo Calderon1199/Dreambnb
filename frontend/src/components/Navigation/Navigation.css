@@ -15,6 +15,17 @@
     margin-right: 0;
 }
 
-.nav-links {
+.nav-links2 {
     list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 20px;
+}
+
+
+.profile-menu-2 {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
 }

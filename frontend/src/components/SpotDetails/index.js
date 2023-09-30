@@ -29,7 +29,7 @@ const SpotDetails = () => {
         .then(() => {
             setIsLoading(false);
         })
-    }, [dispatch, spotId, isLoading]);
+    }, [dispatch, spotId, isLoading, reviews.length]);
 
     useEffect(() => {
         if (!isLoading && spot) {
@@ -55,8 +55,6 @@ const SpotDetails = () => {
     };
 
     const openDeleteReviewModal = (review) => {
-        console.log(reviewToDelete, "openDeleteReviewModal")
-        console.log(review, "openDeleteReviewModal");
         setReviewToDelete(review);
         setIsDeleteReviewModalOpen(true);
     };
@@ -71,13 +69,15 @@ const SpotDetails = () => {
         const reviewToDelete = reviews.find((review) => review.userId === userId);
 
         if (reviewToDelete) {
-            console.log(reviewToDelete, reviewToDelete);
-            await dispatch(getAllReviews(+spotId))
             await dispatch(deleteSpotReview(reviewToDelete.id))
-            closeModal();
+            .then(async () => {
+                await dispatch(getAllReviews(+spotId))
+            }).then(() => {
+                closeModal();
+            })
         }
-
     };
+
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long" };
         return new Date(dateString).toLocaleDateString(undefined, options);
