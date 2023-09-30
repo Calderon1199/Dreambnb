@@ -9,6 +9,7 @@
 }
 
 .card {
+    position: relative;
     border: none;
     padding: 0;
     margin: 20px;
@@ -36,4 +37,29 @@
 .stars {
     display: flex;
     align-items: center;
+}
+
+.tooltip {
+    visibility: hidden; /* Initially hidden */
+    position: absolute;
+    bottom: 50%; /* Position it above the card */
+    left: 50%;
+    transform: translateX(-50%); /* Center it horizontally */
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.card:hover .tooltip {
+    visibility: visible; /* Show the tooltip on card hover */
+}
+
+.card-link {
+    text-decoration: none;
+    color: black;
+
 }

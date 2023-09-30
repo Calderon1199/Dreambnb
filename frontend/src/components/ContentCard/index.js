@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spots";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "./ContentCard.css"
 
 const ContentCard = () => {
@@ -31,6 +32,7 @@ const ContentCard = () => {
     return (
         <div className="card-container">
             {Object.values(allSpotsObj).map((spot) => (
+                <Link to={`/spots/${spot.id}`} key={spot.id} className="card-link">
                     <div className="card" key={spot.address}>
                     <img src={spot.previewImage} alt={spot.name} className="card-image" />
                     <div className="card-info">
@@ -44,7 +46,11 @@ const ContentCard = () => {
                       <p className="card-price">{`$${spot.price} per night`}</p>
                       {/* Add more spot data as needed */}
                     </div>
+                    <div className="tooltip">
+                        {spot.name}
+                    </div>
                   </div>
+                </Link>
             ))}
         </div>
     )
