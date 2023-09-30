@@ -24,9 +24,9 @@ const CurrentSpots = () => {
             dispatch(getUserSpots())
                 .then(() => setIsLoaded(true))
         }
-    }, [dispatch])
+    }, [dispatch, isLoaded, sessionUser])
 
-    if (!spots || spots.length === 0) {
+    if (!spots || spots.length === 0 || !sessionUser) {
         return <div>Loading...</div>;
     }
 
