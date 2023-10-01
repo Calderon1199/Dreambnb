@@ -33,8 +33,8 @@ function LoginFormModal() {
   };
 
   const handleDemoLogin = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     setErrors({});
     return dispatch(sessionActions.login({ credential: "Demo-lition", password: "password"}))
     .then(closeModal)
