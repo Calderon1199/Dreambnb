@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spots";
-import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "./ContentCard.css"
+import { restoreUser } from "../../store/session";
 
 const ContentCard = () => {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
-    const history = useHistory();
 
     const allSpotsObj = useSelector((state) => {
         return state.spots
@@ -18,6 +18,7 @@ const ContentCard = () => {
 
 
     useEffect(() => {
+        dispatch(restoreUser())
         dispatch(getAllSpots())
         .then(() => {
             // Data fetching completed, set isLoading to false
