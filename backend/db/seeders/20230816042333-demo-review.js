@@ -24,7 +24,7 @@ module.exports = {
       },
       {
         userId: 3,
-        spotId: 2,
+        spotId: 5,
         review: "I love this place! The view is breathtaking.",
         stars: 4,
       },
@@ -53,7 +53,7 @@ module.exports = {
         stars: 3,
       },
       {
-        userId: 1,
+        userId: 2,
         spotId: 4,
         review: "Beautiful location, but a bit pricey.",
         stars: 4,
