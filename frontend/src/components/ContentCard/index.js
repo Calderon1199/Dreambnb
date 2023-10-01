@@ -8,6 +8,7 @@ import { restoreUser } from "../../store/session";
 const ContentCard = () => {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
+    const user = useSelector(state => state.session?.user);
 
     const allSpotsObj = useSelector((state) => {
         return state.spots
@@ -18,13 +19,16 @@ const ContentCard = () => {
 
 
     useEffect(() => {
-        dispatch(restoreUser())
+        if (user) {
+            dispatch(restoreUser())
+
+        }
         dispatch(getAllSpots())
         .then(() => {
             // Data fetching completed, set isLoading to false
             setIsLoading(false);
         })
-    }, [dispatch])
+    }, [dispatch, user])
 
 
     if (isLoading) {
