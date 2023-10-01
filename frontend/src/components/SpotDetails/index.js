@@ -45,7 +45,7 @@ const SpotDetails = () => {
     }, [reviews.length, spotId, hasReviews, userId]);
 
     useEffect(() => {
-        dispatch(restoreUser())
+    dispatch(restoreUser())
     dispatch(getAllReviews(+spotId))
     dispatch(getSingleSpot(+spotId))
     .then(() => {
