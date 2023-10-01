@@ -9,6 +9,7 @@ import { useModal } from "../../context/Modal";
 import OpenModalButton from "../OpenModalButton";
 import DeleteReviewModal from "../DeleteReviewModal";
 import "./SpotDetails.css";
+import { restoreUser } from "../../store/session";
 
 const SpotDetails = () => {
     const { spotId } = useParams();
@@ -24,28 +25,35 @@ const SpotDetails = () => {
     const userId2 = useSelector(state => state.session.user?.id);
     const [ userId, setUserId ] = useState(null);
     const { closeModal } = useModal();
-
+    const setReviews = () => {
+    for (let i = 0; i < reviews.length; i++) {
+      if (
+        Number(reviews[i].spotId) === +spotId &&
+        Number(reviews[i].userId) === +userId
+      ) {
+        return setHasReviews(true); // Exit the loop as soon as a review is found
+      }
+    }
+    if (userId2) {
+        setUserId(userId2)
+    }
+    return setHasReviews(false)
+    }
 
     useEffect(() => {
-        for (let i = 0; i < reviews.length; i++) {
-          if (
-            Number(reviews[i].spotId) === +spotId &&
-            Number(reviews[i].userId) === +userId
-          ) {
-            setHasReviews(true);
-            break; // Exit the loop as soon as a review is found
-          }
-        }
-        return setUserId(userId2)
-      }, [reviews.length, spotId]);
+        setReviews();
+    }, [reviews.length, spotId, hasReviews, userId]);
 
     useEffect(() => {
-        dispatch(getAllReviews(+spotId))
-        dispatch(getSingleSpot(+spotId))
-        .then(() => {
-            setIsLoading(false);
-        })
-    }, [dispatch, spotId, isLoading, setHasReviews]);
+        dispatch(restoreUser())
+    dispatch(getAllReviews(+spotId))
+    dispatch(getSingleSpot(+spotId))
+    .then(() => {
+        setIsLoading(false);
+    })
+}, [dispatch, spotId, isLoading]);
+
+
 
     useEffect(() => {
         if (!isLoading && spot) {
@@ -63,6 +71,7 @@ const SpotDetails = () => {
     };
 
     const handleSubmitReview = async (reviewData) => {
+        console.log(reviewData, '-----')
         await dispatch(createNewReview(reviewData, +spotId))
         .then(async() => {
             await dispatch(getAllReviews(+spotId))
@@ -106,7 +115,7 @@ const SpotDetails = () => {
 
 
     // const hasReviews = reviews.some(review => review.userId === userId);
-
+    console.log(hasReviews, '----')
 
     return ( <div className="details-container">
             <div className="spot-details-container">
@@ -176,70 +185,81 @@ const SpotDetails = () => {
 
             {hasReviews ? (
                 <div>
-                    {reviews.map((review) => (
+                   {reviews.map((review) => (
                         <div key={review.id}>
-                            <div>
+                        <div>
                             {review.User && (
-                            <h3>{review.User.firstName}</h3>
-            )}
+                            <h3>{review.User?.firstName}</h3>
+                            )}
                             <h3 className="date">{formatDate(review.createdAt)}</h3>
-                                <p>{review.review}</p>
-                                {Number(review.userId) === +userId && (
-                                    <OpenModalButton
-                                    modalComponent={
-                                        <DeleteReviewModal
-                                        isOpen={isDeleteReviewModalOpen}
-                                        onClose={closeDeleteReviewModal}
-                                        onSubmit={handleDeleteReview}
-                                        />
-                                    }
-                                    buttonText="Delete a Review"
-                                    onClick={() => openDeleteReviewModal(review)}
-                                    />
-                                )}
+                            <p>{review.review}</p>
+                            {Number(review.userId) === +userId && (
+                            <OpenModalButton
+                                modalComponent={
+                                <DeleteReviewModal
+                                    isOpen={isDeleteReviewModalOpen}
+                                    onClose={closeDeleteReviewModal}
+                                    onSubmit={handleDeleteReview}
+                                />
+                                }
+                                buttonText="Delete a Review"
+                                onClick={() => openDeleteReviewModal(review)}
+                            />
+                            )}
                             </div>
                         </div>
                     ))}
                 </div>
                 ) : (
-                <div className="creat-review-button">
-                        {userId && !hasReviews ? (
-                            <OpenModalButton
-                                modalComponent={
-                                <ReviewModal
-                                    isOpen={isReviewModalOpen}
-                                    onClose={closeReviewModal}
-                                    onSubmit={handleSubmitReview}
-                                />
-                                }
-                                buttonText="Post Your Review"
-                                onClick={openReviewModal}
-                            />
-                        ): null}
+                    <div className="creat-review-button">
+                        {userId && (
+                           <OpenModalButton
+                           modalComponent={
+                             <ReviewModal
+                               isOpen={isReviewModalOpen}
+                               onClose={closeReviewModal}
+                               onSubmit={handleSubmitReview}
+                             />
+                           }
+                           buttonText="Post Your Review"
+                           onClick={openReviewModal}
+                         />
+                       )}
                     {reviews.map((review) => (
-                        <div key={review.id}>
-                            <h3>{review.User.firstName}</h3>
-                            <h3 className="date">{formatDate(review.createdAt)}</h3>
-                            <div>
-                                <p>{review.review}</p>
-                                {review.userId === userId && (
-                                    <OpenModalButton
-                                        modalComponent={<DeleteReviewModal
-                                        isOpen={isDeleteReviewModalOpen}
-                                        onClose={closeDeleteReviewModal}
-                                        onSubmit={handleDeleteReview}
-
-                                    />
-                                }
-                                    buttonText="Delete a Review"
-                                    onClick={() => openDeleteReviewModal(review)}
-                                />
-                                )}
-                            </div>
+                      <div key={review.id}>
+                        <h3>{review.User?.firstName}</h3>
+                        <h3 className="date">{formatDate(review.createdAt)}</h3>
+                        <div>
+                          <p>{review.review}</p>
                         </div>
+                      </div>
                     ))}
+                  </div>
+                //     {reviews.map((review) => (
+                //         <div key={review.id}>
+                //             <p>{review.review}</p>
+                //             <h3>{review.User.firstName}</h3>
+                //             <h3 className="date">{formatDate(review.createdAt)}</h3>
+                //             <div>
+                //                 <p>{review.review}</p>
+                //                 {review.userId === userId && (
+                //                     <OpenModalButton
+                //                         modalComponent={<DeleteReviewModal
+                //                         isOpen={isDeleteReviewModalOpen}
+                //                         onClose={closeDeleteReviewModal}
+                //                         onSubmit={handleDeleteReview}
 
-                </div>
+                //                     />
+                //                 }
+                //                     buttonText="Delete a Review"
+                //                     onClick={() => openDeleteReviewModal(review)}
+                //                 />
+                //                 )}
+                //             </div>
+                //         </div>
+                //     ))}
+
+                // </div>
             )}
         </div>
     );
