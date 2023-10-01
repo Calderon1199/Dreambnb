@@ -183,10 +183,11 @@ const SpotDetails = () => {
                             </div>
 
 
-            {hasReviews ? (
+            {hasReviews && userId ? (
                 <div>
                    {reviews.map((review) => (
-                        <div key={review.id}>
+                       <div key={review.id}>
+                            <p>{userId}</p>
                         <div>
                             {review.User && (
                             <h3>{review.User?.firstName}</h3>

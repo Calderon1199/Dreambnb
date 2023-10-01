@@ -36,6 +36,7 @@ function ProfileButton({ user }) {
 
   const logout = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     dispatch(sessionActions.logout());
     history.push("/");
 
