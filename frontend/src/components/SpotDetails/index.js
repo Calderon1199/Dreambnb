@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSpotReview, getAllReviews } from "../../store/reviews";
 import { createNewReview } from "../../store/reviews";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { getSingleSpot } from "../../store/oneSpot";
 import ReviewModal from "../ReviewModal";
 import { useModal } from "../../context/Modal";
@@ -16,27 +16,36 @@ const SpotDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const reviews = useSelector((state) => Object.values(state.reviews));
     const spot = useSelector(state => state.singleSpot.spot);
-    const userId = useSelector(state => state.session.user?.id);
-    const { closeModal } = useModal();
     const [images, setImages] = useState(spot?.SpotImages);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
     const [reviewToDelete, setReviewToDelete] = useState(null);
     const [hasReviews, setHasReviews] = useState(false);
+    const userId2 = useSelector(state => state.session.user?.id);
+    const [ userId, setUserId ] = useState(null);
+    const { closeModal } = useModal();
+
+
+    useEffect(() => {
+        for (let i = 0; i < reviews.length; i++) {
+          if (
+            Number(reviews[i].spotId) === +spotId &&
+            Number(reviews[i].userId) === +userId
+          ) {
+            setHasReviews(true);
+            break; // Exit the loop as soon as a review is found
+          }
+        }
+        return setUserId(userId2)
+      }, [reviews.length, spotId]);
+
     useEffect(() => {
         dispatch(getAllReviews(+spotId))
         dispatch(getSingleSpot(+spotId))
         .then(() => {
             setIsLoading(false);
-            for (let i = 0; i < reviews.length; i++) {
-                if (Number(reviews[i].spotId) === +spotId && Number(reviews[i].userId) === +userId) {
-                    console.log(true);
-                    setHasReviews(true);
-                }
-
-            }
         })
-    }, [dispatch, spotId, isLoading, reviews.length, setHasReviews]);
+    }, [dispatch, spotId, isLoading, setHasReviews]);
 
     useEffect(() => {
         if (!isLoading && spot) {
@@ -69,7 +78,6 @@ const SpotDetails = () => {
     };
 
     const closeDeleteReviewModal = () => {
-        console.log(reviewToDelete, "closeDeleteReviewModal")
         setIsDeleteReviewModalOpen(false);
         setReviewToDelete(null);
     };
@@ -98,9 +106,6 @@ const SpotDetails = () => {
 
 
     // const hasReviews = reviews.some(review => review.userId === userId);
-    console.log(hasReviews, "hasreviews")
-
-    console.log(userId, '-userdi')
 
 
     return ( <div className="details-container">
@@ -179,7 +184,7 @@ const SpotDetails = () => {
             )}
                             <h3 className="date">{formatDate(review.createdAt)}</h3>
                                 <p>{review.review}</p>
-                                {review.userId === +userId && (
+                                {Number(review.userId) === +userId && (
                                     <OpenModalButton
                                     modalComponent={
                                         <DeleteReviewModal
