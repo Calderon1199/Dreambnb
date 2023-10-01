@@ -44,17 +44,18 @@
 
 .tooltip {
     visibility: hidden; /* Initially hidden */
-    position: absolute;
-    top: -100px; /* Adjust the vertical position */
+    position: relative;
+    top: -55%; /* Adjust the vertical position */
     left: 50%;
     transform: translateX(-50%); /* Center it horizontally */
     background-color: #333;
     color: #fff;
     padding: 4px 8px;
+    width: fit-content;
     border-radius: 4px;
     font-size: 12px;
     white-space: nowrap;
-    z-index: 2;
+    z-index: 1;
 }
 
 .card:hover .tooltip {
