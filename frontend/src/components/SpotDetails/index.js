@@ -16,25 +16,34 @@ const SpotDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const reviews = useSelector((state) => Object.values(state.reviews));
     const spot = useSelector(state => state.singleSpot.spot);
-    const userId = useSelector(state => state.session.user.id);
-    const hasReviews = reviews.find(review => review.userId === userId);
+    const userId = useSelector(state => state.session.user?.id);
     const { closeModal } = useModal();
     const [images, setImages] = useState(spot?.SpotImages);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
     const [reviewToDelete, setReviewToDelete] = useState(null);
+    const [hasReviews, setHasReviews] = useState(false);
     useEffect(() => {
-        dispatch(getSingleSpot(+spotId))
         dispatch(getAllReviews(+spotId))
+        dispatch(getSingleSpot(+spotId))
         .then(() => {
             setIsLoading(false);
+            for (let i = 0; i < reviews.length; i++) {
+                if (Number(reviews[i].spotId) === +spotId && Number(reviews[i].userId) === +userId) {
+                    console.log(true);
+                    setHasReviews(true);
+                }
+
+            }
         })
-    }, [dispatch, spotId, isLoading, reviews.length]);
+    }, [dispatch, spotId, isLoading, reviews.length, setHasReviews]);
 
     useEffect(() => {
         if (!isLoading && spot) {
             setImages(spot.SpotImages || "")
     }}, [isLoading, spot]);
+
+
 
     const openReviewModal = (review) => {
         setIsReviewModalOpen(true);
@@ -81,11 +90,17 @@ const SpotDetails = () => {
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long" };
         return new Date(dateString).toLocaleDateString(undefined, options);
-      };
+    };
 
     if (isLoading || !spot) {
         return <div>Loading...</div>;
     };
+
+
+    // const hasReviews = reviews.some(review => review.userId === userId);
+    console.log(hasReviews, "hasreviews")
+
+    console.log(userId, '-userdi')
 
 
     return ( <div className="details-container">
@@ -118,7 +133,7 @@ const SpotDetails = () => {
                         <div className="rating">
                             {reviews.length ? (
                                 <div className="rating-after">
-                                    <i class="fa-solid fa-star"></i>
+                                    <i className="fa-solid fa-star"></i>
                                     <p>{spot.avgStarRating}</p>
                                 </div>
                                 ) : (
@@ -137,7 +152,7 @@ const SpotDetails = () => {
             </div>
                             <div className="review-intro-container">
                                 <div className="star-review">
-                                    <i class="fa-solid fa-star"></i>
+                                    <i className="fa-solid fa-star"></i>
                                 {reviews.length ? (
                                     <div>
                                         <p>{spot.avgStarRating}</p>
@@ -160,22 +175,22 @@ const SpotDetails = () => {
                         <div key={review.id}>
                             <div>
                             {review.User && (
-                <h3>{review.User.firstName}</h3>
+                            <h3>{review.User.firstName}</h3>
             )}
                             <h3 className="date">{formatDate(review.createdAt)}</h3>
                                 <p>{review.review}</p>
-                                {review.userId === userId && (
+                                {review.userId === +userId && (
                                     <OpenModalButton
-                                        modalComponent={<DeleteReviewModal
+                                    modalComponent={
+                                        <DeleteReviewModal
                                         isOpen={isDeleteReviewModalOpen}
                                         onClose={closeDeleteReviewModal}
                                         onSubmit={handleDeleteReview}
-
-                                    />
-                                }
+                                        />
+                                    }
                                     buttonText="Delete a Review"
                                     onClick={() => openDeleteReviewModal(review)}
-                                />
+                                    />
                                 )}
                             </div>
                         </div>
@@ -183,17 +198,19 @@ const SpotDetails = () => {
                 </div>
                 ) : (
                 <div className="creat-review-button">
-                    <OpenModalButton
-                        modalComponent={<ReviewModal
-                            isOpen={isReviewModalOpen}
-                            onClose={closeReviewModal}
-                            onSubmit={handleSubmitReview}
-
-                        />
-                    }
-                        buttonText="Post Your Review"
-                        onClick={openReviewModal}
-                    />
+                        {userId && !hasReviews ? (
+                            <OpenModalButton
+                                modalComponent={
+                                <ReviewModal
+                                    isOpen={isReviewModalOpen}
+                                    onClose={closeReviewModal}
+                                    onSubmit={handleSubmitReview}
+                                />
+                                }
+                                buttonText="Post Your Review"
+                                onClick={openReviewModal}
+                            />
+                        ): null}
                     {reviews.map((review) => (
                         <div key={review.id}>
                             <h3>{review.User.firstName}</h3>

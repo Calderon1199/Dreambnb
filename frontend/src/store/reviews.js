@@ -62,7 +62,7 @@ export const reviewReducer = (state = initialState, action) => {
     let newState;
     switch (action.type) {
         case LOAD_REVIEWS:
-            newState = {...state}
+            newState = {}
             if (Array.isArray(action.payload.Reviews)) {
                 action.payload.Reviews.forEach((review) => {
                     newState[review.id] = review;
