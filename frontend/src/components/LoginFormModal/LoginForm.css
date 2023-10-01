@@ -1,0 +1,45 @@
+.login-header {
+    margin: 20px;
+}
+
+.credential-container {
+    width: 100%;
+}
+.credential-input {
+    margin: 7px 0;
+    width: 100%;
+}
+
+.submit-login-button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.login-button {
+    width: 100%;
+    background-color: darkgray;
+    box-shadow: 2px 3px 5px black;
+
+    font-size: 16px;
+    font-weight: 500;
+    margin: 2px 0 10px 0;
+}
+
+.demo-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: blue;
+    margin: 5px 0 20px 0;
+    font-weight: 600;
+}
+
+.login-form-container {
+    margin: 0 0 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 25em;
+};
