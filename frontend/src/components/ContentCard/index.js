@@ -28,7 +28,7 @@ const ContentCard = () => {
             // Data fetching completed, set isLoading to false
             setIsLoading(false);
         })
-    }, [dispatch, user])
+    }, [dispatch, user, isLoading ])
 
 
     if (isLoading) {

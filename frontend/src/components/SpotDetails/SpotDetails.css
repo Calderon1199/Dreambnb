@@ -45,6 +45,7 @@
     border: 2px solid black;
     border-radius: 15px;
     margin-bottom: 20px;
+    background-color: aqua;
 }
 
 .details-text-container {
@@ -75,6 +76,28 @@
     align-items: center;
 }
 
+
+.review2 {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    align-items: center;
+}
+
+.review3 {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.review4 {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    align-items: center;
+}
+
 .review-second {
     display: flex;
     justify-content: space-between;
@@ -86,7 +109,7 @@
     display: flex;
     font-size: 20px;
     width: 20%;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
 }
@@ -133,4 +156,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.price {
+    font-weight: bold;
 }
