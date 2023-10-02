@@ -8,6 +8,11 @@
     border-radius: 15px;
 }
 
+.signup-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .info-container {
     display: flex;

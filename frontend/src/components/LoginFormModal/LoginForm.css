@@ -1,9 +1,12 @@
 .login-header {
     margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .credential-container {
-    width: 100%;
+    width: 50%;
 }
 .credential-input {
     margin: 7px 0;
