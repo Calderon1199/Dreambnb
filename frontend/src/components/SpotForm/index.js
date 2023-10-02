@@ -1,6 +1,6 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createNewSpot } from "../../store/spots";
 import { addImageToSpot } from "../../store/spots";
 import "./SpotForm.css"
@@ -8,6 +8,7 @@ import "./SpotForm.css"
 const SpotForm = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const user = useSelector(state => state.session.user);
     const [country, setCountry] = useState("");
     const [address, setAddress] = useState("");
     const [state, setState] = useState("");
@@ -23,6 +24,29 @@ const SpotForm = () => {
     const [imageUrl3, setImageUrl3] = useState('');
     const [imageUrl4, setImageUrl4] = useState('');
     const [errors, setErrors] = useState({});
+    const [isCreateButtonClicked, setIsCreateButtonClicked] = useState(false);
+
+
+
+      const validateCountry = (value) => {
+        const regex = /^[A-Za-z\s]+$/;
+        return regex.test(value);
+      };
+
+      const validateAddress = (value) => {
+        const regex = /^[0-9]+\s[A-Za-z\s]+$/;
+        return regex.test(value);
+      };
+
+      const validateState = (value) => {
+        const regex = /^[A-Za-z]+$/;
+        return regex.test(value);
+      };
+
+      const validateCity = (value) => {
+        const regex = /^[A-Za-z\s]+$/;
+        return regex.test(value);
+      };
 
 
     const spotData = {
@@ -34,7 +58,7 @@ const SpotForm = () => {
       lng,
       name,
       description,
-      price,
+      price: +price,
       url: previewImageUrl,
       preview: true
     };
@@ -46,11 +70,7 @@ const SpotForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let errorsObj = {}
-        if (!country) errorsObj.country = "Country is required"
-        if (!address) errorsObj.address = "Address is required"
-        if (!city) errorsObj.city = "City is required"
-        if (!state) errorsObj.state = "State is required"
+        let errorsObj = {};
         if (!lat) errorsObj.lat = "Latitude is required"
         if (!lng) errorsObj.lng = "Longitude is required"
         if (description.length < 30) errorsObj.description = "Description needs a minimum of 30 characters"
@@ -62,27 +82,73 @@ const SpotForm = () => {
         if (imageUrl2 && !imageUrl2.endsWith('.png') && !imageUrl2.endsWith('.jpg') && !imageUrl2.endsWith('.jpeg')) errorsObj.image2Url = "Image URL must end in .png, .jpg, or .jpeg"
         if (imageUrl3 && !imageUrl3.endsWith('.png') && !imageUrl3.endsWith('.jpg') && !imageUrl3.endsWith('.jpeg')) errorsObj.image3Url = "Image URL must end in .png, .jpg, or .jpeg"
         if (imageUrl4 && !imageUrl4.endsWith('.png') && !imageUrl4.endsWith('.jpg') && !imageUrl4.endsWith('.jpeg')) errorsObj.image4Url = "Image URL must end in .png, .jpg, or .jpeg"
+        if (!validateCountry(country)) {
+            errorsObj.country = "Country must contain only letters and spaces";
+          } else if (!country) {
+            errorsObj.country = "Country is required"
+          }
+
+        if (!validateAddress(address)) {
+            errorsObj.address = "Address must start with a number and contain only letters and spaces";
+        } else if (!address) {
+            errorsObj.address = "Address is required"
+        }
+        if (!validateState(state)) {
+            errorsObj.state = "State must contain alphabetic characters only";
+        } else if (!state){
+            errorsObj.state = "State is required"
+        }
+        if (!validateCity(city)) {
+            errorsObj.city = "City must contain only letters and spaces";
+        } else if (!city) {
+            errorsObj.city = "City is required"
+        }
+        setErrors(errorsObj)
 
         if (Object.values(errorsObj).length) {
-            return setErrors(errorsObj)
+            return;
         }
 
-        const newSpot = await dispatch(createNewSpot(spotData));
+        if (user ) {
+            console.log(spotData, 'blah')
+            const newSpot = await dispatch(createNewSpot(spotData));
+            console.log(newSpot, 'ek');
+            await dispatch(addImageToSpot(newSpot.id, previewImageUrl, spotData.preview))
+            .then(() => {
+                spotData.preview = false;
+            }).then(async() => {
+                for(let i = 0; i < extraImages.length; i++) {
+                    if (extraImages[i] !== "") {
+                        await dispatch(addImageToSpot(newSpot.id, extraImages[i], spotData.preview))
+                    }
+                }
+            })
 
-
-    await dispatch(addImageToSpot(newSpot.id, previewImageUrl, spotData.preview))
-    .then(() => {
-        spotData.preview = false;
-    }).then(async() => {
-        for(let i = 0; i < extraImages.length; i++) {
-            if (extraImages[i] !== "") {
-                await dispatch(addImageToSpot(newSpot.id, extraImages[i], spotData.preview))
-            }
+            history.push(`/spots/${newSpot.id}`);
         }
-    })
 
-    history.push(`/spots/${newSpot.id}`);
+
 };
+useEffect(() => {
+    if (isCreateButtonClicked) {
+      setCountry("");
+      setAddress("");
+      setState("");
+      setCity("");
+      setName("");
+      setLat("37.7645358");
+      setLng("-122.4730327");
+      setDescription("");
+      setPrice("");
+      setPreviewImageUrl("");
+      setImageUrl1("");
+      setImageUrl2("");
+      setImageUrl3("");
+      setImageUrl4("");
+      setErrors({});
+      setIsCreateButtonClicked(false); // Reset the flag
+    }
+  }, [isCreateButtonClicked]);
 
 
     return (

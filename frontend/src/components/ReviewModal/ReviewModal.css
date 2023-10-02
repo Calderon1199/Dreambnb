@@ -1,0 +1,42 @@
+.review-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content
+}
+
+.review-modal-content {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 20em;
+    width: 25em;
+}
+
+.review-header {
+    margin: 0;
+}
+
+.review-text-area {
+    width: 80%;
+    height: 30%;
+    /* resize: none; */
+}
+
+.stars-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.star-radio-buttons {
+    display: none;
+}
+
+.star {
+    margin: 0 3px;
+    font-size: 25px;
+    transition: color 200ms;
+}

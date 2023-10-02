@@ -7,6 +7,7 @@ import OpenModalButton from "../OpenModalButton";
 import { useModal } from "../../context/Modal";
 import { getSingleSpot } from "../../store/oneSpot";
 import "./CurrentSpots.css";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const CurrentSpots = () => {
     const history = useHistory();
@@ -57,6 +58,10 @@ const CurrentSpots = () => {
         history.push(`/spots/${spotId}/edit`);
     };
 
+    const handleClick = (e, spotId) => {
+        history.push(`/spots/${spotId}`);
+    }
+
 
     if (!spots || spots.length === 0) {
         return <div>Loading...</div>;
@@ -71,17 +76,17 @@ const CurrentSpots = () => {
             </div>
             <div className="card-container">
                 {usersSpots.map((spot) => (
-                    <div className="card" key={spot.address}>
-                        <img src={spot.previewImage} alt={spot.name} className="card-image" />
-                        <div className="card-info">
-                            <h2 className="card-title">{spot.name}</h2>
-                        <div className="card-details">
-                            <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
-                            <p className="card-rating">{spot.avgRating}</p>
+                        <div className="card" key={spot.address}>
+                            <img src={spot.previewImage} alt={spot.name} className="card-image" onClick={(e, spotId) => handleClick(e, spot.id)}/>
+                            <div className="card-info" onClick={(e, spotId) => handleClick(e, spot.id)}>
+                                <h2 className="card-title">{spot.name}</h2>
+                            <div className="card-details">
+                                <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
+                                <p className="card-rating">{spot.avgRating}</p>
+                            </div>
+                            <p className="card-price">{`$${spot.price} / Night`}</p>
+                            {/* Add more spot data as needed */}
                         </div>
-                        <p className="card-price">{`$${spot.price} / Night`}</p>
-                        {/* Add more spot data as needed */}
-                    </div>
                     <div className="buttons">
                         <button onClick={(e) => { handleEditSpot(e, spot.id) }}>Update a spot</button>
                     <OpenModalButton

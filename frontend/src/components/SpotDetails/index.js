@@ -25,14 +25,15 @@ const SpotDetails = () => {
     const userId2 = useSelector(state => state.session.user?.id);
     const [ userId, setUserId ] = useState(null);
     const { closeModal } = useModal();
+
     const setReviews = () => {
-    for (let i = 0; i < reviews.length; i++) {
+        for (let i = 0; i < reviews.length; i++) {
       if (
         Number(reviews[i].spotId) === +spotId &&
         Number(reviews[i].userId) === +userId
       ) {
-        return setHasReviews(true); // Exit the loop as soon as a review is found
-      }
+          return setHasReviews(true); // Exit the loop as soon as a review is found
+        }
     }
     if (userId2) {
         setUserId(userId2)
