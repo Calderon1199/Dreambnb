@@ -6,11 +6,14 @@
 }
 
 .credential-container {
-    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 .credential-input {
     margin: 7px 0;
-    width: 100%;
+    width: 80%;
 }
 
 .submit-login-button {
