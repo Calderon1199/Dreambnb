@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import "./SignupForm.css";
 
 function SignupFormModal() {
+  const user = useSelector(state => state.session.user);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -14,6 +17,18 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  if (user) history.push('/');
+
+  const isInvalid =
+    email === "" ||
+    username.length < 4 ||
+    firstName === "" ||
+    lastName === "" ||
+    password.length < 6 ||
+    confirmPassword !== password;
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,9 +43,15 @@ function SignupFormModal() {
           password,
         })
       )
-        .then(closeModal)
+        .then((user) => {
+          if (!user.errors) {
+            dispatch(sessionActions.login({ credential: email, password}));
+            closeModal();
+          }
+        })
         .catch(async (res) => {
           const data = await res.json();
+          console.log(data, '-----be')
           if (data && data.errors) {
             setErrors(data.errors);
           }
@@ -38,78 +59,97 @@ function SignupFormModal() {
     }
     return setErrors({
       confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
+  });
   };
 
   return (
-    <>
-      <h1>Sign Up</h1>
+    <div className="sign-up-container">
+      <div >
+        <h1>Sign Up</h1>
+            {Object.values(errors).map((error, index) => (
+              <p className="error" key={index}>
+            {error}
+          </p>
+        ))}
+      </div>
       <form onSubmit={handleSubmit}>
+        <div className="info-container">
         <label>
-          Email
           <input
+            className="info-input"
             type="text"
             value={email}
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        {errors.username && <p>{errors.username}</p>}
-        <label>
-          First Name
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-        </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
-        <button type="submit">Sign Up</button>
+        </div>
+        <div className="info-container">
+          <label>
+            <input
+              className="info-input"
+              type="text"
+              value={username}
+              placeholder="Username"
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="info-container">
+          <label>
+            <input
+              className="info-input"
+              type="text"
+              value={firstName}
+              placeholder="First Name"
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="info-container">
+          <label>
+            <input
+              className="info-input"
+              type="text"
+              value={lastName}
+              placeholder="Last Name"
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="info-container">
+          <label>
+            <input
+              className="info-input"
+              type="password"
+              value={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="info-container">
+          <label>
+            <input
+              className="info-input"
+              type="password"
+              value={confirmPassword}
+              placeholder="Confirm Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="signup-button-container">
+          <button className="sign-up-button" type="submit" disabled={isInvalid}>Sign Up</button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 

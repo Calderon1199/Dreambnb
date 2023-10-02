@@ -54,8 +54,16 @@ textarea {
     height: 17%;
 }
 
+.country-address-container {
+    width: 100%
+}
+
+.description-container {
+    width: 100%;
+}
+
+
 .country-address-input {
-    background-color: aqua;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -91,7 +99,7 @@ textarea {
 
 .description-textarea {
     resize: none;
-    width: 98.9%;
+    width: 100%;
     height: 159px;
 }
 
@@ -100,6 +108,7 @@ textarea {
 .name-container {
     display: flex;
     justify-content: space-between;
+    width: 100%;
     border-top: 3px solid black;
     margin-top: 5%;
 }
@@ -113,41 +122,57 @@ textarea {
 }
 
 .name-input {
-    width: 98.3%;
+    width: 100%;
 }
 
 /* -----------price----------------- */
 
 .price-container {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     border-top: 3px solid black;
+    width: 100%;
     margin-top: 5%;
 }
 
 .price-input {
-    width: 98.3%;
+    width: 100%;
+    margin-left: 5px;
+}
+.price-sign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px;
+    font-weight: bold;
 }
 
 /* -------------image----------------- */
 
 .image-container {
-    /* display: flex;
-    justify-content: space-between; */
+    display: flex;
+    width: 100%;
+    margin: 0;
     margin-top: 5%;
 }
 
 .image-input-container {
     display: flex;
+    width: 100%;
+    margin: 4px 0;
     flex-direction: column;
     justify-content: space-between;
-    height: 200px
+    height: 20px
+}
+
+.img-inputs {
+    width: 100%;
 }
 
 .image-input {
-    width: 98.3%;
+    width: 100%;
 }
-
 /* ------------submit button----------------- */
 
 .submit-container {

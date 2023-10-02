@@ -28,6 +28,8 @@ function LoginFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
+        } else {
+          setErrors({ credential: "The provided credentials were invalid" })
         }
       });
   };
@@ -50,6 +52,11 @@ function LoginFormModal() {
   return (
     <div className="login-form-container">
       <h1 className="login-header">Log In</h1>
+        {Object.values(errors).map((error, index) => (
+          <p className="error" key={index}>
+        {error}
+        </p>
+      ))}
       <form onSubmit={handleSubmit} className="form">
         <div className="credential-container">
           <label>
@@ -75,9 +82,6 @@ function LoginFormModal() {
             />
           </label>
         </div>
-        {errors.credential && (
-          <p>{errors.credential}</p>
-        )}
           <div className="submit-login-button">
             <button type="submit" className="login-button" disabled={isInvalid}>Log In</button>
           </div>

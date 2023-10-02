@@ -16,7 +16,7 @@ const SpotForm = () => {
     const [lat, setLat] = useState("37.7645358");
     const [lng, setLng] = useState("-122.4730327");
     const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("0");
+    const [price, setPrice] = useState("");
     const [previewImageUrl, setPreviewImageUrl] = useState('');
     const [imageUrl1, setImageUrl1] = useState('');
     const [imageUrl2, setImageUrl2] = useState('');
@@ -166,7 +166,7 @@ const SpotForm = () => {
 
                 {/* --------------------------- */}
                 <div className="name-container">
-                    <label>
+                    <label className="name-input">
                         <h2 className="section-title">Create a title for your spot</h2>
                         <p className="section-title-p">Catch guests' attention with a spot title that highlights what makes your place special.</p>
                         <input
@@ -182,26 +182,30 @@ const SpotForm = () => {
                     </label>
                 </div>
                 <div className="price-container">
-                    <label>
+                    <label className="price-input">
                         <h2 className="section-title">Set a base price for your spot</h2>
                         <p className="section-title-p">Competitive pricing can help your listing stand out and rank higher in search results</p>
-                        <input
-                            type="number"
-                            name="price"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="price-input"
-                            required
-                            placeholder="Price per night (USD)"
-                        />
+                        <div className="price-sign">
+                            <p>$</p>
+                            <input
+                                type="number"
+                                name="price"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                className="price-input"
+                                required
+                                placeholder="Price per night (USD)"
+                            />
+                        </div>
                         {errors.price && <div className="error">Price is required</div>}
                     </label>
                 </div>
                 <div className="image-container">
-  <label>
+  <label className="img-inputs">
     <h2 className="section-title">Liven up your spot with photos</h2>
-    <p className="section-title-p">Submit links to at least one photo to publish your spot</p>
+    <p className="section-title-p">Submit a link to at least one photo to publish your spot</p>
     <input
+        className="image-input-container"
           name="previewImg"
           placeholder="Preview Image URL"
           value={previewImageUrl}
@@ -209,6 +213,7 @@ const SpotForm = () => {
         />
         {errors.previewImageUrl && <p className="error">{errors.previewImageUrl}</p>}
         <input
+        className="image-input-container"
           name="Img1"
           placeholder="Image URL"
           value={imageUrl1}
@@ -216,6 +221,7 @@ const SpotForm = () => {
         />
         {errors.image1Url && <p className="error">{errors.image1Url}</p>}
         <input
+            className="image-input-container"
           name="Img2"
           placeholder="Image URL"
           value={imageUrl2}
@@ -223,6 +229,7 @@ const SpotForm = () => {
         />
         {errors.image2Url && <p className="error">{errors.image2Url}</p>}
         <input
+            className="image-input-container"
           name="Img3"
           placeholder="Image URL"
           value={imageUrl3}
@@ -230,6 +237,7 @@ const SpotForm = () => {
         />
         {errors.image3Url && <p className="error">{errors.image3Url}</p>}
         <input
+            className="image-input-container"
           name="Img4"
           placeholder="Image URL"
           value={imageUrl4}

@@ -1,0 +1,35 @@
+.sign-up-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 15px;
+}
+
+
+.info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30em;
+    margin: 20px 0;
+}
+
+.info-input {
+    width: 100%;
+}
+
+.signup-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+.sign-up-button {
+    width: 40%;
+    background-color: grey;
+}
