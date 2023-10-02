@@ -70,7 +70,7 @@ function LoginFormModal() {
             />
           </label>
         </div>
-        <div>
+        <div className="credential-container">
           <label>
             <input
               type="password"
