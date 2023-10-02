@@ -29,9 +29,9 @@ const ReviewModal = ({isOpen, onClose, onSubmit }) => {
   return (
     <div className={`review-modal ${isOpen ? "open" : ""}`}>
       <div className="review-modal-content">
-        <h2>Create a Review</h2>
+        <h2>How was your stay</h2>
         <textarea
-            placeholder="Write your review here..."
+            placeholder="Leave your review here..."
             value={reviewText}
             onChange={handleReviewTextChange}
         />

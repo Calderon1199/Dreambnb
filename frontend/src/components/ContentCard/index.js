@@ -46,7 +46,7 @@ const ContentCard = () => {
                         <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
                         <div className="stars">
                             <i className="fa-solid fa-star"></i>
-                            <p className="card-rating">{spot.avgRating}</p>
+                            <p className="card-rating">{spot.avgRating || "NEW"}</p>
                         </div>
                       </div>
                       <p className="card-price">{`$${spot.price} per night`}</p>

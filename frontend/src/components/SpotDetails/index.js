@@ -51,7 +51,7 @@ const SpotDetails = () => {
     .then(() => {
         setIsLoading(false);
     })
-}, [dispatch, spotId, isLoading]);
+}, [dispatch, spotId, isLoading, reviews.length]);
 
 
 
@@ -155,10 +155,18 @@ const SpotDetails = () => {
                             )}
                         </div>
                         <div className="review">
-                        {reviews.length ? (
-                            <h4>{spot.numReviews} Reviews</h4>
+                        {reviews.length === 1 ? (
+                            <h4>{spot.numReviews} Review</h4>
+                            ) : reviews.length > 1 ? (
+                                <>
+                                    <p className="seperator">·</p>
+                                    <h4>{spot.numReviews} Reviews</h4>
+                                </>
                             ) : (
-                            <p>New</p>
+                            <div className="new-stars">
+                                <i className="fa-solid fa-star"></i>
+                                <h2>New</h2>
+                            </div>
                         )}
                         </div>
                     </div>
@@ -172,14 +180,24 @@ const SpotDetails = () => {
                                         <p>{spot.avgStarRating}</p>
                                     </div>
                                     ) : (
-                                <h2>New</h2>
+                                        <div>
+                                            <h2>New</h2>
+                                        </div>
                                 )}
                                 </div>
-                                {reviews.length ? (
-                            <h4>{spot.numReviews} Reviews</h4>
-                            ) : (
-                            <></>
-                        )}
+                                {reviews.length === 1 ? (
+                                    <h4>{spot.numReviews} Review</h4>
+                                    ) : (
+                                        <div className="review-second">
+                                            <p className="seperator">·</p>
+                                    {reviews.length > 1? (
+                                        <div >
+                                            <h4>{spot.numReviews} Reviews</h4>
+                                        </div>
+                                ): null}
+                                </div>
+
+                                )}
                             </div>
 
 
@@ -212,19 +230,40 @@ const SpotDetails = () => {
                 </div>
                 ) : (
                     <div className="creat-review-button">
-                        {userId && (
-                           <OpenModalButton
-                           modalComponent={
-                             <ReviewModal
-                               isOpen={isReviewModalOpen}
-                               onClose={closeReviewModal}
-                               onSubmit={handleSubmitReview}
-                             />
-                           }
-                           buttonText="Post Your Review"
-                           onClick={openReviewModal}
-                         />
-                       )}
+                        {userId && reviews.length < 1 && spot.ownerId !== userId? (
+                            <div>
+                            <OpenModalButton
+                            modalComponent={
+                            <ReviewModal
+                                isOpen={isReviewModalOpen}
+                                onClose={closeReviewModal}
+                                onSubmit={handleSubmitReview}
+                            />
+                            }
+                            buttonText="Post Your Review"
+                            onClick={openReviewModal}
+                        />
+                        <p>Be the first to post a review!</p>
+                    </div>
+                ) : (
+                    <div>
+                        {userId && !hasReviews && spot.ownerId !== userId? (
+                        <OpenModalButton
+                        modalComponent={
+                            <ReviewModal
+                            isOpen={isReviewModalOpen}
+                            onClose={closeReviewModal}
+                            onSubmit={handleSubmitReview}
+                            />
+                        }
+                        buttonText="Post Your Review"
+                        onClick={openReviewModal}
+                        />
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                )}
                     {reviews.map((review) => (
                       <div key={review.id}>
                         <h3>{review.User?.firstName}</h3>
