@@ -156,14 +156,17 @@ const SpotDetails = () => {
                         </div>
                         <div className="review">
                         {reviews.length === 1 ? (
-                            <h4>{spot.numReviews} Review</h4>
+                            <div className="review2">
+                                <p className="seperator">·</p>
+                                <h4>{spot.numReviews} Review</h4>
+                            </div>
                             ) : reviews.length > 1 ? (
-                                <>
+                                <div div className="review2">
                                     <p className="seperator">·</p>
                                     <h4>{spot.numReviews} Reviews</h4>
-                                </>
-                            ) : (
-                            <div className="new-stars">
+                                </div>
+                                ) : (
+                                    <div className="new-stars">
                                 <i className="fa-solid fa-star"></i>
                                 <h2>New</h2>
                             </div>
@@ -186,15 +189,18 @@ const SpotDetails = () => {
                                 )}
                                 </div>
                                 {reviews.length === 1 ? (
-                                    <h4>{spot.numReviews} Review</h4>
+                                    <div div className="review4">
+                                        <p className="seperator">·</p>
+                                        <h4>{spot.numReviews} Review</h4>
+                                    </div>
                                     ) : (
                                         <div className="review-second">
-                                            <p className="seperator">·</p>
-                                    {reviews.length > 1? (
-                                        <div >
-                                            <h4>{spot.numReviews} Reviews</h4>
-                                        </div>
-                                ): null}
+                                            {reviews.length > 1 ? (
+                                                <div div className="review3">
+                                                    <p className="seperator">·</p>
+                                                    <h4>{spot.numReviews} Reviews</h4>
+                                                </div>
+                                        ): null}
                                 </div>
 
                                 )}
