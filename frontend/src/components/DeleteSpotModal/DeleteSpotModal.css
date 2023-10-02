@@ -1,0 +1,43 @@
+.delete-spot-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    width: fit-content
+}
+
+
+.delete-spot-modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+}
+
+.delete-header {
+    margin-bottom: 0;
+}
+
+.delete-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3px 0;
+    width: 90%;
+}
+
+.delete-button {
+    border: 1px solid black;
+    color: white;
+    width: 100%;
+}
+
+#delete-1 {
+    background-color: #ff5a5f;
+}
+
+#delete-2 {
+    background-color: darkgray;
+}

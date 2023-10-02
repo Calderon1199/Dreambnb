@@ -1,52 +1,65 @@
 import { useState } from "react";
-
+import "./ReviewModal.css";
 
 const ReviewModal = ({isOpen, onClose, onSubmit }) => {
     const [reviewText, setReviewText] = useState("");
-    const [stars, setStars] = useState(1);
+    const [stars, setStars] = useState(0);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const [error, setError] = useState(null);
 
     const handleReviewTextChange = (e) => {
         const newText = e.target.value;
         setReviewText(newText);
         setIsSubmitDisabled(newText.length < 10 || stars === 0);
+        setError(null);
       };
 
-      const handleStarsChange = (e) => {
-        const newStars = parseInt(e.target.value);
-        setStars(newStars);
-        setIsSubmitDisabled(reviewText.length < 10 || newStars === 0);
+      const handleStarHover = (starValue) => {
+        if (stars === 0) {
+          setStars(starValue);
+        }
       };
 
-    const handleSubmit = () => {
-            onSubmit({ review: reviewText, stars });
-            setReviewText("");
-            onClose();
+      const handleStarClick = (starValue) => {
+        setStars(starValue);
+      };
 
+    const handleSubmit = async () => {
+      try {
+        const res = await onSubmit({ review: reviewText, stars });
+        setReviewText("");
+        onClose();
+      } catch (err) {
+        setError(err.errors || "Please enter text only."); // Set the error message
+      }
     };
 
 
   return (
     <div className={`review-modal ${isOpen ? "open" : ""}`}>
       <div className="review-modal-content">
-        <h2>How was your stay?</h2>
+        <h2 className="review-header">How was your stay?</h2>
+        {error && <p className="errors">{error}</p>}
         <textarea
             placeholder="Leave your review here..."
             value={reviewText}
             onChange={handleReviewTextChange}
+            className="review-text-area"
         />
         <div className="stars-input">
-          <label>Stars:</label>
-          <select
-            value={stars}
-            onChange={handleStarsChange}
-          >
-            <option value={5}>5</option>
-            <option value={4}>4</option>
-            <option value={3}>3</option>
-            <option value={2}>2</option>
-            <option value={1}>1</option>
-          </select>
+          {[...Array(5)].map((star, i)=> (
+            <label
+              key={i}
+              onMouseEnter={() => handleStarHover(i + 1)}
+              onClick={() => handleStarClick(i + 1)}
+              >
+              <input type="radio" name="rating" className="star-radio-buttons" value={i+1} defaultChecked={i + 1 === stars}/>
+              <i style={{
+                  color: i + 1 <= stars ? "#fcb3bf" : "#ccc",
+                }} className="fa-solid fa-star star"></i>
+            </label>
+          ))}
+          <h4>Stars</h4>
         </div>
         <button onClick={handleSubmit} disabled={isSubmitDisabled}>Submit</button>
       </div>
