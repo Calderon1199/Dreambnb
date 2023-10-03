@@ -1,0 +1,24 @@
+/*  */
+
+.image-container {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+.edit-label {
+    width: 100%;
+    height: fit-content
+}
+.image-input-container {
+    width:100%
+}
+.button-container {
+    height: fit-content;
+}
+.submit-button {
+    margin-top: 250px;
+    margin-bottom: 30px;
+}
