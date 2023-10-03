@@ -33,7 +33,6 @@ const EditSpotForm = () => {
         })
     }, [dispatch, spotId, isLoading]);
 
-    console.log(extraImages, '---------------')
     useEffect(() => {
         if (!isLoading && spot) {
             setCountry(spot.country || "");
@@ -52,8 +51,6 @@ const EditSpotForm = () => {
 
 
     const imageId = (spot?.SpotImages.find(img => img.preview === true).id);
-    console.log(imageId, '-----------imageid')
-    console.log('this is spot', spot);
 
     const [errors, setErrors] = useState({
         country: false,
@@ -85,7 +82,6 @@ const EditSpotForm = () => {
           };
 
           dispatch(editSpot(spotData, +spotId));
-          console.log(spotData, 'this is spot data');
           // Clear the form fields after submission (if needed)
           // Redirect to the newly created spot's page
           history.push(`/spots/${spotId}`);

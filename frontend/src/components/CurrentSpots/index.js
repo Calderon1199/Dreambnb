@@ -67,7 +67,6 @@ const CurrentSpots = () => {
         return <div>Loading...</div>;
     }
     const usersSpots = Object.values(spots);
-    console.log(usersSpots, '----------')
     return (
         <div>
             <div className="user-spots-intro">

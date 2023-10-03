@@ -88,21 +88,20 @@ const SpotForm = () => {
             errorsObj.country = "Country is required"
           }
 
-        if (!validateAddress(address)) {
-            errorsObj.address = "Address must start with a number and contain only letters and spaces";
-            console.log(validateAddress(address), 'eeeeeee')
-        } else if (!address) {
+        if (!address) {
             errorsObj.address = "Address is required"
+        } else if (!validateAddress(address)) {
+            errorsObj.address = "Address must start with a number and contain only letters and spaces";
         }
-        if (!validateState(state)) {
-            errorsObj.state = "State must contain alphabetic characters only";
-        } else if (!state){
+        if (!state) {
             errorsObj.state = "State is required"
+        } else if (!validateState(state)){
+            errorsObj.state = "State must contain alphabetic characters only";
         }
         if (!validateCity(city)) {
-            errorsObj.city = "City must contain only letters and spaces";
-        } else if (!city) {
             errorsObj.city = "City is required"
+        } else if (!validateCity(city)) {
+            errorsObj.city = "City must contain only letters and spaces";
         }
         setErrors(errorsObj)
 
@@ -111,9 +110,7 @@ const SpotForm = () => {
         }
 
         if (user ) {
-            console.log(spotData, 'blah')
             const newSpot = await dispatch(createNewSpot(spotData));
-            console.log(newSpot, 'ek');
             await dispatch(addImageToSpot(newSpot.id, previewImageUrl, spotData.preview))
             .then(() => {
                 spotData.preview = false;

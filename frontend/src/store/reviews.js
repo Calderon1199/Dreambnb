@@ -53,7 +53,6 @@ export const deleteSpotReview = (reviewId) => async (dispatch) => {
         method: 'DELETE'
     });
     const review = await response.json()
-    console.log(review, "this is review")
     dispatch(deleteReview(reviewId))
     return review;
 }

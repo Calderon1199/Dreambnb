@@ -72,7 +72,6 @@ const SpotDetails = () => {
     };
 
     const handleSubmitReview = async (reviewData) => {
-        console.log(reviewData, '-----')
         await dispatch(createNewReview(reviewData, +spotId))
         .then(async() => {
             await dispatch(getAllReviews(+spotId))
@@ -116,7 +115,6 @@ const SpotDetails = () => {
 
 
     // const hasReviews = reviews.some(review => review.userId === userId);
-    console.log(hasReviews, '----')
 
     return ( <div className="details-container">
             <div className="spot-details-container">

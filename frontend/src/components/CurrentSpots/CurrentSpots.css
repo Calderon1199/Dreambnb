@@ -15,7 +15,9 @@
 }
 
 .card-title {
-    margin: 5px
+    display: flex;
+    margin: 5px;
+    overflow: hidden;
 }
 
 .card-location {
@@ -38,4 +40,12 @@
     border: 2px solid black;
     height: 90%;
     width: 100%;
+}
+
+.card-image:hover {
+    cursor: pointer
+}
+
+.card-info:hover {
+    cursor: pointer
 }
