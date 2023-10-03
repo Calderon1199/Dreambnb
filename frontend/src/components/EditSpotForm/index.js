@@ -313,7 +313,7 @@ const EditSpotForm = () => {
                 {/* Add input fields for other spot details */}
                 <div className="submit-container">
                     <div className="button-container">
-                        <button className="submit-button" type="submit">Update Spot</button>
+                        <button className="submit-button" type="submit">Update Your Spot</button>
                     </div>
                 </div>
             </form>
