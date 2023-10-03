@@ -10,7 +10,7 @@ const ReviewModal = ({isOpen, onClose, onSubmit }) => {
     const handleReviewTextChange = (e) => {
         const newText = e.target.value;
         setReviewText(newText);
-        setIsSubmitDisabled(newText.length < 10 || stars === 0);
+        setIsSubmitDisabled(newText.length < 1 || stars < 1);
         setError(null);
       };
 
@@ -22,6 +22,7 @@ const ReviewModal = ({isOpen, onClose, onSubmit }) => {
 
       const handleStarClick = (starValue) => {
         setStars(starValue);
+        setIsSubmitDisabled(starValue < 1 || reviewText.length < 1);
       };
 
     const handleSubmit = async () => {

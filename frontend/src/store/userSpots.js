@@ -54,7 +54,6 @@ export const editSpot = (newSpotData, spotId) => async(dispatch) =>{
         body: JSON.stringify(newSpotData)
     };
 
-    console.log(JSON.stringify(newSpotData), '----------------------')
     const response = await csrfFetch(`/api/spots/${spotId}`, options);
     if(response.ok) {
         const newSpot = await response.json();
@@ -76,7 +75,6 @@ const userSpotReducer = (state = initialState, action) => {
             return newState;
         case DELETE_SPOT:
             const spotIdToDelete = action.payload;
-            console.log(spotIdToDelete, '------id')
             newState = { ...state };
             delete newState[spotIdToDelete];
             return newState;
