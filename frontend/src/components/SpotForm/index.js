@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState, useEffect } from "react";
-import { createNewSpot } from "../../store/spots";
+import { createNewSpot, getAllSpots } from "../../store/spots";
 import { addImageToSpot } from "../../store/spots";
 import "./SpotForm.css"
+import { getAllReviews } from "../../store/reviews";
 
 const SpotForm = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const user = useSelector(state => state.session.user);
+    const spots = useSelector(state => Object.values(state.spots))
     const [country, setCountry] = useState("");
     const [address, setAddress] = useState("");
     const [state, setState] = useState("");
@@ -25,8 +27,20 @@ const SpotForm = () => {
     const [imageUrl4, setImageUrl4] = useState('');
     const [errors, setErrors] = useState({});
     const [isCreateButtonClicked, setIsCreateButtonClicked] = useState(false);
+    console.log(spots, '---')
 
+    useEffect(() => {
+        dispatch(getAllSpots())
+    }, [dispatch])
 
+    const isNewAddressUnique = (newAddress, spots) => {
+        for (const spot of spots) {
+            if (newAddress === spot.address) {
+            return false;
+            }
+  }
+  return true;
+};
 
       const validateCountry = (value) => {
         const regex = /^[A-Za-z\s]+$/;
@@ -71,6 +85,7 @@ const SpotForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let errorsObj = {};
+        if (!isNewAddressUnique(address, spots)) errorsObj.address = "Address must be unique";
         if (!lat) errorsObj.lat = "Latitude is required"
         if (!lng) errorsObj.lng = "Longitude is required"
         if (description.length < 30) errorsObj.description = "Description needs a minimum of 30 characters"
