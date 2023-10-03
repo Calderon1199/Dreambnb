@@ -20,6 +20,8 @@ const CurrentSpots = () => {
     const { closeModal } = useModal();
 
 
+
+
     useEffect(() => {
         if (sessionUser) {
             dispatch(getUserSpots())
