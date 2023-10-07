@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteSpotReview, getAllReviews } from "../../store/reviews";
 import { createNewReview } from "../../store/reviews";
-import { useParams, useLocation } from "react-router-dom/cjs/react-router-dom.min";
-import { getSingleSpot } from "../../store/oneSpot";
+import { useParams} from "react-router-dom/cjs/react-router-dom.min";
 import ReviewModal from "../ReviewModal";
-import { useModal } from "../../context/Modal";
 import OpenModalButton from "../OpenModalButton";
 import DeleteReviewModal from "../DeleteReviewModal";
-import "./SpotDetails.css";
+import { useModal } from "../../context/Modal";
+import { getSingleSpot } from "../../store/oneSpot";
 import { restoreUser } from "../../store/session";
+import { deleteSpotReview, getAllReviews } from "../../store/reviews";
+import "./SpotDetails.css";
 
 const SpotDetails = () => {
     const { spotId } = useParams();
@@ -122,15 +122,20 @@ const SpotDetails = () => {
                 <h4>{spot.city}, {spot.state}, {spot.country}</h4>
             </div>
             {images && images.length > 0 && (
-                <div className="image-container">
-                    {images.map((image) => (
-                    <div key={image.id} className={`pic${image.id}`}>
-                        <img src={image.url} alt={`Image ${image.id}`} />
+                <div className="spot-details-image-container">
+                    <div className="big-image">
+                    <img src={images[0].url} alt={`Image ${images[0].id}`} />
                     </div>
+                    <div className="small-images">
+                    {images.slice(1, 5).map((image) => (
+                        <div key={image.id} className={`small-image pic${image.id}`}>
+                        <img src={image.url} alt={`Image ${image.id}`} />
+                        </div>
                     ))}
+                    </div>
                 </div>
             )}
-            <h2>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
+            <h2 className="owner-intro">Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
             <div className="details-text-container">
                 <div className="description">
                     <p>{spot.description}</p>

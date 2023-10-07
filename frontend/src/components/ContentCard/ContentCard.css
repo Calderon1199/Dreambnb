@@ -1,37 +1,89 @@
-.card-container {
+.content-card-link {
+    text-decoration: none;
+    color: black;
+
+}
+.content-card-container {
     display: grid;
     border: none;
     justify-content: center;
-    grid-template-columns: repeat(4, 20%);
+    grid-template-columns: repeat(4, 22%);
     grid-gap: 20px;
-    margin: 25px auto;
-
+    margin: 25px 25px;
 }
 
-.card {
+.content-card {
     position: flex;
-    border: none;
-    margin-bottom: 35px;
-    height: 100%;
-    /* margin: 20px; */
+    margin-bottom: 10px;
+    height: fit-content;
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.card-details {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
+.content-card-image-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 300px
 }
 
-.card-image {
-    border: 2px solid black;
-    padding: none;
+.content-card-image {
+    object-fit: cover;
     height: 100%;
     width: 100%;
 }
+
+
+.content-card-info {
+    width: 100%;
+}
+
+.content-card-details {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    justify-content: space-between;
+    height: fit-content;
+    font-size: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content;
+}
+
+.content-card-price-container {
+    display: flex;
+    width: 20%;
+    height: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-card-price {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.price-night {
+    margin-left: 15%;
+}
+
+
+.content-card-location {
+    margin: 0;
+}
+
+.card-rating {
+    margin: 0;
+}
+/*
+
 
 .card-price {
     margin: 0;
@@ -41,29 +93,31 @@
     display: flex;
     align-items: center;
 }
-
-.tooltip {
-    visibility: hidden; /* Initially hidden */
-    position: relative;
-    top: -55%; /* Adjust the vertical position */
-    left: 50%;
-    transform: translateX(-50%); /* Center it horizontally */
-    background-color: #333;
-    color: #fff;
-    padding: 4px 8px;
-    width: fit-content;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 1;
 }
-
-.card:hover .tooltip {
-    visibility: visible; /* Show the tooltip on card hover */
-}
-
 .card-link {
     text-decoration: none;
     color: black;
 
-}
+} */
+
+
+
+    .tooltip {
+        visibility: hidden;
+        position: relative;
+        top: -55%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 4px 8px;
+        width: fit-content;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1;
+    }
+
+    .card:hover .tooltip {
+        visibility: visible;
+    }
