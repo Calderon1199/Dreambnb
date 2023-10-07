@@ -1,34 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllSpots } from "../../store/spots";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import "./ContentCard.css"
+import { getAllSpots } from "../../store/spots";
 import { restoreUser } from "../../store/session";
+import "./ContentCard.css"
 
 const ContentCard = () => {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
-    const user = useSelector(state => state.session?.user);
-
-    const allSpotsObj = useSelector((state) => {
-        return state.spots
-    });
-
-
-
-
+    const allSpotsObj = useSelector((state) => state.spots);
 
     useEffect(() => {
-        if (user) {
-            dispatch(restoreUser())
-
-        }
         dispatch(getAllSpots())
         .then(() => {
-            // Data fetching completed, set isLoading to false
             setIsLoading(false);
         })
-    }, [dispatch, user, isLoading ])
+    }, [dispatch])
 
 
     if (isLoading) {
@@ -36,20 +23,25 @@ const ContentCard = () => {
     }
 
     return (
-        <div className="card-container">
+        <div className="content-card-container">
             {Object.values(allSpotsObj).map((spot) => (
-            <Link  to={`/spots/${spot.id}`} key={spot.id}  className="card-link">
-                <div className="card" key={spot.address}>
-                    <img src={spot.previewImage} alt={spot.name} className="card-image" />
-                    <div className="card-info">
-                      <div className="card-details">
-                        <p className="card-location">{`${spot.city}, ${spot.state}`}</p>
+            <Link  to={`/spots/${spot.id}`} key={spot.id}  className="content-card-link">
+                <div className="content-card" key={spot.address}>
+                    <div className="content-card-image-container">
+                        <img src={spot.previewImage} alt={spot.name} className="content-card-image" />
+                    </div>
+                    <div className="content-card-info">
+                      <div className="content-card-details">
+                        <p className="content-card-location">{`${spot.city}, ${spot.state}`}</p>
                         <div className="stars">
                             <i className="fa-solid fa-star"></i>
                             <p className="card-rating">{spot.avgRating || "NEW"}</p>
                         </div>
                       </div>
-                      <p className="card-price">{`$${spot.price} per night`}</p>
+                      <div className="content-card-price-container">
+                        <p className="content-card-price">{`$${spot.price}`}</p>
+                        <p className="price-night"> Night</p>
+                      </div>
                       {/* Add more spot data as needed */}
                     </div>
                     <div className="tooltip">
